@@ -1,0 +1,56 @@
+<?php
+// +----------------------------------------------------------------------
+// | OneThink [ WE CAN DO IT JUST THINK IT ]
+// +----------------------------------------------------------------------
+// | Copyright (c) 2013 http://www.onethink.cn All rights reserved.
+// +----------------------------------------------------------------------
+// | Author: 麦当苗儿 <zuojiazi@vip.qq.com> <http://www.zjzit.cn>
+// +----------------------------------------------------------------------
+
+namespace Home\Controller;
+use OT\DataDictionary;
+
+/**
+ * 前台首页控制器
+ * 主要获取首页聚合数据
+ */
+class IndexController extends HomeController {
+
+	//系统首页
+    public function index(){
+        //$city = get_current_city();
+        //redirect(__ROOT__."/home/$city/", 0, '正在跳转...');
+        //redirect(U('Weibo/Index/index'));
+        /*
+        $category = D('Category')->getTree();
+        $lists    = D('Document')->lists(null);
+        $this->assign('category',$category);//栏目
+        $this->assign('lists',$lists);//列表
+        $this->assign('page',D('Document')->page);//分页
+        $this->display();
+        */
+        $city = get_current_city();
+
+        cookie('city', $city['id'], 30 * 24 * 60 * 60);
+
+        $this->assign('city', $city);
+        
+        $this->display('cityIndex');
+    }
+
+    public function cityIndex($city){
+        $District = D('District');
+
+        $city = $District->field('id,name')->find($city);
+        if(empty($city)){
+            $city = $District->field('id,name')->find(C('DEFAULT_CITY'));
+        }
+        
+        cookie('city', $city['id'], 30 * 24 * 60 * 60);
+
+        $this->assign('city', $city);
+
+        $this->display();
+    }
+
+}

@@ -1,0 +1,35 @@
+<extend name="Base/common"/>
+
+<block name="header">
+	<span>{$city.name}</span><a href="{:U('Home/District/switchCity')}">切换城市</a>
+</block>
+
+<block name="side"></block>
+
+<block name="body">
+	<div>
+		<if condition="is_login()">
+		<a class="btn btn-default" href="{:U('Home/HouseRent/add')}">信息发布</a>
+		</if>
+	</div>
+	{:W('District/showFilter', array("__ROOT__/home/hr/[area]/$price/$room/$rentType/$contactType/$pn", $city, $area))}
+	{:W('Lookup/showFilter', array("__ROOT__/home/hr/$area/[price]/$room/$rentType/$contactType/$pn", '[price]', 'HOUSE_RENT_PRICE_RANGE', $price))}
+	{:W('Lookup/showFilter', array("__ROOT__/home/hr/$area/$price/[room]/$rentType/$contactType/$pn", '[room]', 'HOUSE_RENT_BEDROOM', $room))}
+	{:W('Lookup/showFilter', array("__ROOT__/home/hr/$area/$price/$room/[rentType]/$contactType/$pn", '[rentType]', 'HOUSE_RENT_TYPE', $rentType))}
+	<table style="width:100%;">
+		<?php use Common\Model\LookupModel;?>
+		<volist id="hr" name="dataList">
+		<tr>
+			<td><img src="{$hr.thumbnail|default='/Public/wartertest.png'}"/></td>
+			<td>
+				<a href="{:U('/Home/hr/detail/'.$hr['id'])}" target="_blank">{$hr.title}</a>
+			</td>
+			<td>{$hr.price}</td>
+			<td>{$hr.price_unit|LookupModel::getValue='OFFICE_MARKET_PRICE_UNIT',###}</td>
+			<td>{$hr.busi_area_name}</td>
+			<td>{$hr.square}M<sup>2</sup></td>
+		</tr>
+		</volist>
+	</table>
+	{:W('Pagination/showPagination', array("__ROOT__/home/hr/$area/$price/$room/$rentType/$contactType/[pn]", $pn, $totalCount, $scope))}
+</block>

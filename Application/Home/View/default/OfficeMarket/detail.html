@@ -1,0 +1,24 @@
+<extend name="Base/common"/>
+
+<block name="header">
+    
+</block>
+
+<block name="side"></block>
+
+<block name="body">
+	<div class="col-xs-9 main-content">
+		<?php use Common\Model\LookupModel;?>
+		<h2>[{:LookupModel::getValue('HOUSE_SUPPLY_DEMAND', $info['sd_type'])}]{$info.title}</h2>
+		<div>区域{$info.area}{$info.busi_area}</div>
+		<div>地段{$info.area_sector}</div>
+		<div>类别{:LookupModel::getValue('OFFICE_MARKET_BD_TYPE', $info['bd_type'])}</div>
+		<div>地段{$info.square}M<sup>2</sup></div>
+		<div>价格{$info.price}</div>
+		<volist id='housePic' name='info.picList'>
+			<img style='width: 200px;' src='{$housePic.path}'/>
+			<br/>
+		</volist>
+		<section id="contents">{$info.desc_txt}</section>
+	</div>
+</block>

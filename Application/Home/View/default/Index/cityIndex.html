@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <include file="Public/head"/>
+</head>
+<body style="background-color: #fff;">
+<!-- 头部 -->
+<include file="Public/header"/>
+<!-- /头部 -->
+
+<!-- 主体 -->
+<!--顶部Banner-->
+<div class="jumbotron" style="margin-top: -20px;">
+    <div class="container">
+        [{$city.name}]<a href="{:U('District/switchCity')}">切换城市</a>
+    </div>
+</div>
+
+<!--特性介绍-->
+<div class="container">
+    
+</div>
+
+<!-- 底部 -->
+<include file="Public/footer"/>
+<script>
+    $(function(){
+        $.cookies.set('onethink_home_city', '{$city.id}');
+    });
+</script>
+<!-- /底部 -->
+</body>
+</html>

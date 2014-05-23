@@ -1,0 +1,7 @@
+<ul class="nav nav-pills">
+	<volist name="areaList" id="area">
+	<li <notempty name="area.active">class="active"</notempty>>
+		<a href="{$area.url}">{$area.name}</a>
+	</li>
+	</volist>
+</ul>

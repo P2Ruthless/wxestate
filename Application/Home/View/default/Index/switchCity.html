@@ -1,0 +1,13 @@
+<extend name="Base/common"/>
+
+<block name="side"></block>
+
+<block name="body">
+<ul class="list-inline">
+<volist name="cityList" id="city">
+<li>
+	<a href="__ROOT__/Home/{$city.id}">{$city.name}</a>
+</li>
+</volist>
+</ul>
+</block>

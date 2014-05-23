@@ -1,0 +1,35 @@
+<extend name="Base/common"/>
+
+<block name="header">
+	<span>{$city.name}</span><a href="{:U('Home/District/switchCity')}">切换城市</a>
+</block>
+
+<block name="side"></block>
+
+<block name="body">
+	<div>
+		<if condition="is_login()">
+		<a class="btn btn-default" href="{:U('Home/OfficeMarket/add')}">信息发布</a>
+		</if>
+	</div>
+	{:W('District/showFilter', array("__ROOT__/home/om/[area]/$bdType/$contactType/$sdType/$pn", $city, $area))}
+	{:W('Lookup/showFilter', array("__ROOT__/home/om/$area/[bdType]/$contactType/$sdType/$pn", '[bdType]', 'OFFICE_MARKET_BD_TYPE', $bdType))}
+	{:W('Lookup/showFilter', array("__ROOT__/home/om/$area/$bdType/[contactType]/$sdType/$pn", '[contactType]', 'HOUSE_CONTACT_TYPE', $contactType))}
+	{:W('Lookup/showTab', array("__ROOT__/home/om/$area/$bdType/$contactType/[sdType]/$pn", '[sdType]', 'HOUSE_SUPPLY_DEMAND', $sdType))}
+	<table style="width:100%;">
+		<?php use Common\Model\LookupModel;?>
+		<volist id="om" name="dataList">
+		<tr>
+			<td><img src="{$om.thumb|default='/Public/wartertest.png'}"/></td>
+			<td>
+				<a href="{:U('/Home/om/detail/'.$om['id'])}" target="_blank">{$om.title}</a>
+			</td>
+			<td>{$om.price}</td>
+			<td>{$om.price_unit|LookupModel::getValue='OFFICE_MARKET_PRICE_UNIT',###}</td>
+			<td>{$om.busi_area_name}</td>
+			<td>{$om.square}M<sup>2</sup></td>
+		</tr>
+		</volist>
+	</table>
+	{:W('Pagination/showPagination', array("__ROOT__/home/om/$area/$bdType/$contactType/$sdType/[pn]", $pn, $totalCount, $scope))}
+</block>

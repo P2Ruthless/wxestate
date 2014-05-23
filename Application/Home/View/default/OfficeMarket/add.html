@@ -1,0 +1,187 @@
+<extend name="Base/common"/>
+
+<block name="style">
+<style type="text/css">
+input[type=text]{
+	border: 1px solid black;
+}
+input[type=submit]{
+	padding: .5em 1em;
+	color: white;
+	background-color: green;
+	border: none;
+}
+input[type=submit]:hover{
+	background-color: #990;
+}
+</style>
+</block>
+
+<block name="side"></block>
+
+<block name="body">
+	<?php
+	use Common\Model\LookupModel;
+	use Home\Model\DistrictModel;
+	?>
+	<form action="{:U('add')}" method="post">
+	<input type="hidden" name="id" value="{$info.id|default=''}"/>
+	<input type="hidden" name="pid" value="{$info.pid|default=''}"/>
+	<input type="hidden" name="model_id" value="{$info.model_id|default=''}"/>
+	<input type="hidden" name="category_id" value="{$info.category_id|default=''}">
+	<input type="hidden" name="type" value="{$info.doc_type}"/>
+	<input type="hidden" name="description" value=""/>
+	<input type="hidden" name="city" value="{$info.city.id}"/>
+	<label>供求</label>
+	{:W('Lookup/showRadio', array('sd_type', I('sd_type', '3'), 'HOUSE_SUPPLY_DEMAND'))}
+	<br/>
+
+	<label>标题</label>
+	<input type="text" name="title" value="{:I('title')}"/>
+	<br/>
+	
+	<div id="realEstate">
+		<label>楼盘名称</label>
+		<input type="text" name="real_estate" value="{:I('readEstate')}"/>
+	</div>
+	
+	<label>所在区域</label>
+	{:W('District/showSelect', array(get_current_city()))}
+	<br/>
+	
+	<label id="sectorLabel">地段</label>
+	<input type="text" name="area_sector"/>
+	<label id="sectorLabel2">附近的</label>
+	<input type="text" name="area_sector_nearby"/>
+	<br/>
+
+	<label>类型</label>
+	{:W('Lookup/showSelect', array('bd_type', I('bd_type'), 'OFFICE_MARKET_BD_TYPE', false))}
+	<input type="checkbox" name="comp_register" value="Y"/>可注册公司
+	<label>面积</label><input type="text" name="square" />
+	-<input type="text" id="square_max" name="square_max" value="{:I('square_max')}"/>m<sup>2</sup>
+	<br/>
+	<label>价格</label>
+	<input type="text" name="price" value="{:I('price')}"/>
+	-
+	<input type="text" id="price_max" name="price_max" value="{:I('price_max')}"/>
+	{:W('Lookup/showSelect', array('price_unit', I('priceUnit'), 'OFFICE_MARKET_PRICE_UNIT', false, array('id'=>'price_unit')))}
+	<br/>
+	<label>补充说明</label>
+	<textarea id="desc_txt" name="desc_txt"></textarea>
+	{:hook('documentEditFormContent',array('id'=>'desc_txt','value'=>htmlspecialchars(I('desc_txt'))))}
+	<br/>
+	<div id="house_pic_upload">
+		<div id="img_explorer"></div>
+		<input type="file" id="house_pic_file"/>
+		<input type="hidden" id="house_pic" name="house_pic" value='{:I("house_pic", "[]")}'/>
+		<div id="img_box"></div>
+		<div class="clearfix"></div>
+		<div id="queue_container"></div>
+	</div>
+	<br/>
+	<label>联系电话</label>
+	<input type="text" name="contact_tel" value="{:I('contact_tel')}"/>
+	<br/>
+	<label>联系人</label>
+	<input type="text" name="contact" value="{:I('contact')}"/>
+	<br/>
+	<label>身份</label>
+	{:W('Lookup/showSelect', array('contact_type', I('contact_type'), 'HOUSE_CONTACT_TYPE', false))}
+	<br/>
+	<input type="submit" value="确定并发布"/>
+	</form>
+</block>
+
+<block name="script">
+<script type="text/javascript" src="__STATIC__/jquery.chained.min.js"></script>
+<script type="text/javascript" src="__STATIC__/uploadify/jquery.uploadify.mymin.js"></script>
+<script type="text/javascript" src="__STATIC__/scripts/imageexplorer.js"></script>
+<script type="text/javascript">
+$(function(){
+	function setDisplay(){
+		var sdType = $('input[name="sd_type"]:checked').val();
+		if(sdType == 1){
+			$('#realEstate').hide();
+			$('#realEstate input').attr('disabled', true);
+			$('#sectorLabel').text('期望地段');
+			$('#sectorLabel2').text('或');
+			$('#square_max').attr('disabled', false).show();
+			$('#price_max').attr('disabled', false).show();
+			$('#house_pic_upload').hide();
+			$('#house_pic').attr('disabled', true);
+		}else if(sdType == 2){
+			$('#realEstate').hide();
+			$('#realEstate input').attr('disabled', true);
+			$('#sectorLabel').text('期望地段');
+			$('#sectorLabel2').text('或');
+			$('#square_max').attr('disabled', false).show();
+			$('#price_max').attr('disabled', false).show();
+			$('#house_pic_upload').hide();
+			$('#house_pic').attr('disabled', true);
+		}else if(sdType == 3){
+			$('#realEstate').show();
+			$('#realEstate input').attr('disabled', false);
+			$('#sectorLabel').text('地段');
+			$('#sectorLabel2').text('附近的');
+			$('#square_max').attr('disabled', true).hide();
+			$('#price_max').attr('disabled', true).hide();
+			$('#house_pic_upload').show();
+			$('#house_pic').attr('disabled', false);
+		}else if(sdType == 4){
+			$('#realEstate').show();
+			$('#realEstate input').attr('disabled', false);
+			$('#sectorLabel').text('地段');
+			$('#sectorLabel2').text('附近的');
+			$('#square_max').attr('disabled', true).hide();
+			$('#price_max').attr('disabled', true).hide();
+			$('#house_pic_upload').show();
+			$('#house_pic').attr('disabled', false);
+		}
+	}
+	
+	setDisplay();
+
+	$('input:radio[name="sd_type"]').click(function(){
+		setDisplay();
+	});
+
+	$("#busi_area").chained("#area");
+
+	var imgExplorer = new ImageExplorer({container: '#img_box', picsHolder: '#house_pic', column: 8});
+
+	$("#house_pic_file").uploadify({
+		'height': 34,
+		'swf': '__STATIC__/uploadify/uploadify.swf',
+		'uploader': "{:U('File/uploadHousePics')}",
+		'fileObjName': 'fileUpload',
+		'buttonClass': 'btn btn-primary',
+		'multi': true,
+		'queueID': 'queue_container',
+		'uploadLimit': 8,
+		//'queueSizeLimit': 5,
+		'fileSizeLimit': '2MB',
+		'buttonText': '上传图片',
+		'fileTypeExts': '*.jpg; *.png; *.gif; *.bmp',
+		'fileTypeDesc': 'JPG,PNG,GIF,BMP',
+		'removeTimeout': 1,
+		'formData': {'PHPSESSID': '<?php echo session_id();?>'},
+		'onUploadSuccess': function(file, data, response){
+			var info = $.parseJSON(data);
+			if(info.status == 1){
+				imgExplorer.addItem(info);
+			}else{
+				alert(info.info);
+			}
+		},
+		'onUploadError': function(file, errorCode, errorMsg, errorString){
+			//alert(file.name + " 上传失败 " + errorCode + " " + errorMsg + " " + errorString);
+		},
+		'onFallback': function(){
+			alert('请先安装Flash插件');
+		}
+	});
+
+});
+</script>
+</block>

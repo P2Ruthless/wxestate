@@ -1,0 +1,81 @@
+<extend name="Public/base"/>
+<block name="style">
+<style type="text/css">
+.sub-menu{
+	padding-left: 35px !important;
+}
+</style>
+</block>
+
+<block name="body">
+	<div class="main-title">
+		<h2>微信菜单管理</h2>
+	</div>
+	<div class="cf">
+		<div class="fl">
+			<a class="btn" href="{:U('Weixin/addMenu', array('account'=>$account['id']))}">新 增</a>
+		</div>
+		<div class="search-form fr cf">
+			<div class="sleft">
+				<select id="account_list">
+				<volist name="accountList" id="acc">
+				<option value="{$acc.id}" <eq name="acc.id" value="$account.id">selected</eq>>{$acc.desc_txt}</option>
+				</volist>
+				</select>
+			</div>
+        </div>
+	</div>
+
+	<!-- 表格列表 -->
+	<div class="data-table table-striped">
+		<table>
+			<thead>
+				<tr>
+					<th>名称</th>
+					<th>类型</th>
+					<th>链接</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<notempty name="dataList">
+				<volist name="dataList" id="data">
+				<tr>
+					<td><a href="{:U('Weixin/editMenu', array('id'=>$data['id']))}">{$data.name}</a></td>
+					<td>{$data.type}</td>
+					<td>{$data.url}</td>
+					<td>
+						<a href="{:U('Weixin/deleteAccount', array('id'=>$data['id']))}" class="confirm ajax-get">删除</a>
+					</td>
+				</tr>
+					<volist name="data._child" id="data">
+					<tr>
+						<td class="sub-menu"><a href="{:U('Weixin/editMenu', array('id'=>$data['id']))}">{$data.name}</a></td>
+						<td>{$data.type}</td>
+						<td>{$data.url}</td>
+						<td>
+							<a href="{:U('Weixin/deleteAccount', array('id'=>$data['id']))}" class="confirm ajax-get">删除</a>
+						</td>
+					</tr>
+					</volist>
+				</volist>
+				<else/>
+				<td colspan="9" class="text-center"> aOh! 暂时还没有内容!</td>
+				</notempty>
+			</tbody>
+		</table>
+	</div>
+	<!-- /表格列表 -->
+</block>
+
+<block name="script">
+<script type="text/javascript">
+$(function(){
+	$('#account_list').change(function(){
+		window.location.href = Think.U('Admin/Weixin/accountMenu', {'account':this.value});
+	});
+	highlight_subnav("{:U('Admin/Weixin/accountMenu')}");
+});
+</script>
+
+</block>

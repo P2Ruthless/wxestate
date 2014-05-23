@@ -1,0 +1,56 @@
+<extend name="Public/base"/>
+
+<block name="body">
+	<div class="main-title">
+		<h2>账户管理</h2>
+	</div>
+	<div class="cf">
+		<div class="fl">
+			<a class="btn" href="{:U('Weixin/addAccount')}">新 增</a>
+		</div>
+	</div>
+
+	<!-- 表格列表 -->
+	<div class="data-table table-striped">
+		<table>
+			<thead>
+				<tr>
+					<th>微信号</th>
+					<th>备注</th>
+					<th>APP ID</th>
+					<th>APP Secret</th>
+					<th>接入TOKEN</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<notempty name="accountList">
+				<volist name="accountList" id="account">
+				<tr>
+					<td>{$account.id}</td>
+					<td><a href="{:U('Admin/Weixin/editAccount', array('id'=>$account['id']))}">{$account.desc_txt|default='点击编辑'}</a></td>
+					<td>{$account.app_id}</td>
+					<td>{$account.app_secret}</td>
+					<td>{$account.valid_token}</td>
+					<td>
+						<if condition="$account.status eq 1">
+						<a class="confirm ajax-get" href="{:U('Weixin/inactiveAccount', array('id'=>$account['id']))}">禁用</a>
+						<else/>
+						<a class="confirm ajax-get" href="{:U('Weixin/enableAccount', array('id'=>$account['id']))}">启用</a>
+						</if>
+						<a href="{:U('Weixin/deleteAccount', array('id'=>$account['id']))}" class="confirm ajax-get">删除</a>
+					</td>
+				</tr>
+				</volist>
+				<else/>
+				<td colspan="9" class="text-center"> aOh! 暂时还没有内容!</td>
+				</notempty>
+			</tbody>
+		</table>
+	</div>
+	<!-- /表格列表 -->
+</block>
+
+<block name="script">
+	
+</block>

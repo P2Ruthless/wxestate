@@ -1,0 +1,51 @@
+<extend name="Public/base" />
+
+<block name="body">
+	<div class="main-title cf">
+		<h2><if condition="ACTION_NAME eq 'addaccount'">新增<else/>编辑</if>微信账户</h2>
+	</div>
+	<!-- 表单 -->
+	<form id="form" action="<if condition="ACTION_NAME eq 'addaccount'">{:U('addAccount')}<else/>{:U('editAccount')}</if>" method="post" class="form-horizontal">
+		<div class="form-item cf">
+			<label class="item-label">微信号</label>
+			<div class="controls">
+				<input type="text" class="text input-large" name="id" value="{$account.id}" <if condition="ACTION_NAME eq 'editaccount'">readOnly</if>>
+			</div>
+		</div>
+		<div class="form-item cf">
+			<label>备注</label>
+			<div class="controls">
+				<input type="text" class="text input-large" name="desc_txt" value="{$account.desc_txt}"/>
+			</div>
+		</div>
+		<div class="form-item cf">
+			<label class="item-label">APP ID</label>
+			<div class="controls">
+				<input type="text" class="text input-large" name="app_id" value="{$account.app_id}">
+			</div>
+		</div>
+		<div class="form-item cf">
+			<label class="item-label">APP Secret</label>
+			<div class="controls">
+				<input type="text" class="text input-large" name="app_secret" value="{$account.app_secret}">
+			</div>
+		</div>
+		<div class="form-item cf">
+			<label class="item-label">接入TOKEN</label>
+			<div class="controls">
+				<input type="text" class="text input-large" name="valid_token" value="{$account.valid_token}">
+			</div>
+		</div>
+
+		<div class="form-item">
+			<button type="submit" class="btn submit-btn ajax-post" target-form="form-horizontal">确 定</button>
+			<button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+		</div>
+	</form>
+</block>
+
+<block name="script">
+<script type="text/javascript">
+    highlight_subnav('{:U('Weixin/account')}');
+</script>
+</block>
