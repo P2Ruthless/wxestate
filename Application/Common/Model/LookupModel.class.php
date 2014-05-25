@@ -18,8 +18,8 @@ class LookupModel extends Model{
 	}
 
 	public static function getValue($type, $name){
-		if(isset(LookupModel::$_cache[$type][$name])){
-			return LookupModel::$_cache[$type][$name];
+		if(isset(LookupModel::$_cache[$type])){
+			return isset(LookupModel::$_cache[$type][$name]) ? LookupModel::$_cache[$type][$name] : $name;
 		}
 
 		$nvList = D('Lookup')
@@ -35,7 +35,7 @@ class LookupModel extends Model{
 			LookupModel::$_cache[$type][$nv['name']] = $nv['val'];
 		}
 
-		return LookupModel::$_cache[$type][$name];
+		return isset(LookupModel::$_cache[$type][$name]) ? LookupModel::$_cache[$type][$name] : $name;
 
 	}
 }

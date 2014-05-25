@@ -1118,6 +1118,14 @@ function array_subtract($a, $b)
     return array_diff($a, array_intersect($a, $b));
 }
 
+function get_lookup_list($type){
+    return Common\Model\LookupModel::getList($type);
+}
+
+function get_lookup_value($type, $name){
+    return Common\Model\LookupModel::getValue($type, $name);
+}
+
 require_once(APP_PATH . '/Common/Common/pagination.php');
 require_once(APP_PATH . '/Common/Common/query_user.php');
 require_once(APP_PATH . '/Common/Common/thumb.php');

@@ -30,7 +30,7 @@ class HomeController extends Controller {
         C($config); //添加配置
 
         if(!C('WEB_SITE_CLOSE')){
-            $this->error('站点已经关闭，请稍后访问~');
+            $this->error('站点维护中，请稍后访问~');
         }
     }
 

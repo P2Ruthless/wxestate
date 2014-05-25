@@ -1,0 +1,53 @@
+<extend name="Public/base"/>
+
+<block name="body">
+    <div class="main-title">
+        <h2>{:isset($district['id'])?'编辑':'新增'}区域</h2>
+    </div>
+    <form action="{:U('update')}" method="post" class="form-horizontal">
+    <notempty name="district.id">
+    <input type="hidden" name="id" value="{$district.id|default=''}">
+    </notempty>
+    <empty name="district">
+    <input type="hidden" name="pid" value="{$parentDistrict.id}"/>
+    <else/>
+    <input type="hidden" name="pid" value="{$district.pid}" />
+    </empty> 
+    <div class="form-item">
+        <label class="item-label">名称</label>
+        <div class="controls">
+            <input type="text" class="text input-large" name="name" value="{$district.name|default=''}">
+        </div>
+    </div>
+    <div class="form-item">
+        <label class="item-label">类型</label>
+        <div class="controls">
+            <select name="type">
+                <volist name=":get_lookup_list('DISTRICT_TYPE')" id="areaType">
+                <option value="{$areaType.name}" <eq name="district.type" value="$areaType.name">selected</eq>>{$areaType.val}</option>
+                </volist>
+            </select>
+        </div>
+    </div>
+    <div class="form-item">
+        <label class="item-label">失效</label>
+        <div class="controls">
+            <select name="inactive">
+            <volist name=":get_lookup_list('BOOL_CHAR')" id="inactive">
+            <option value="{$inactive.name}" <eq name="district.inactive" value="$inactive.name">selected</eq>>{$inactive.val}</option>
+            </volist>
+            </select>
+        </div>
+    </div>
+    <div class="form-item">
+        <button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-horizontal">确 定</button>
+        <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+    </div>
+    </form>
+</block>
+
+<block name="script">
+    <script type="text/javascript">
+    highlight_subnav('{:U('lists')}');
+    </script>
+</block>

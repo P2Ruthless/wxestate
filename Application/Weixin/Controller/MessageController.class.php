@@ -2,41 +2,38 @@
 namespace Weixin\Controller;
 
 use Think\Controller;
+use Weixin\Api\Wechat;
 
 class MessageController extends Controller{
-	public function execute($wxid, $signature=null, $timestamp=null, $nonce=null, $echostr=null){
-		$WxAccount = M('WxAccount');
-		$account = $WxAccount->field('valid_token')
-			->where(array('id'=>$wxid, 'status'=>1))
-			->find();
+	private $_wechat;
 
-		if(empty($account)
-			|| !$this->checkSignature($account['valid_token'], $signature, $timestamp, $nonce)){
-			exit();
+	public function execute($wxid){
+		$this->_wechat = Wechat::create($wxid);
+		if($this->wechat == false){
+			die('账户不存在或已失效');
 		}
+/*
+		$validResult = $this->_wechat->valid(true);
 
 		if(!IS_POST){
-			echo $echostr;
-			exit();
-		}
-		$postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
-
-		if(empty($postStr)){
-			exit();
+			die($validResult);
 		}
 
-		$msgObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
-
-		if($this->checkRepeat($msgObj)){
-			exit();
+		if($validResult === false){
+			die('no access');
 		}
+*/
+		$type = $this->_wechat->getRev()->getRevType();
 
+		if($this->checkRepeat()){
+			die('repeat messages');
+		}
 
 		$EventMaterial = M('WxEventMaterial');
 		$executor = $EventMaterial->field('m.id,m.type,m.content,m.title,m.media_id,m.music_url,m.hq_music_url')
 				->alias('em')
 				->join('__WX_MATERIAL__ m on em.material_id=m.id')
-				->where(array('em.account_id'=>$wxid, 'em.event_type'=>(string)$msgObj->MsgType))
+				->where(array('em.account_id'=>$wxid, 'em.event_type'=>$type))
 				->find();
 
 		if(empty($executor)){
@@ -49,49 +46,41 @@ class MessageController extends Controller{
 			exit();
 		}
 
-		$result = call_user_func_array(array($this, $executorMethodName), array($wxid, $msgObj, $executor));
+		$result = call_user_func_array(array($this, $executorMethodName), array($wxid, $executor));
 
 		if($result){
 			echo $result;
 		}
 	}
 
-	protected function checkSignature($myToken, $signature, $timestamp, $nonce){
-		$tmpArr = array($myToken, $timestamp, $nonce);
-		sort($tmpArr, SORT_STRING);
-		$tmpStr = implode($tmpArr);
-		$tmpStr = sha1($tmpStr);
-
-		if( $tmpStr == $signature ){
-			return true;
-		}else{
-			return false;
-		}
-	}
-
-	protected function checkRepeat($msgObj, $save = true){
-		if($msgObj->MsgType == 'event'){
+	protected function checkRepeat($save = true){
+		$type = $this->_wechat->getRevType();
+		if($type == Wechat::MSGTYPE_EVENT){
 			$model = M('WxUserEvent');
 
 			$data = $model->field('id')
-				->where(array('from_user'=>$msgObj->FromUserName, 'created'=>(int)$msgObj->CreateTime))
+				->where(array('from_user'=>$this->_wechat->getRevFrom(), 'created'=>(int)$this->_wechat->getRevCtime()))
 				->find();
 
 			if(!empty($data) || !$save){
 				return true;
 			}
 
-			$data['from_user'] = (string)$msgObj->FromUserName;
-			$data['to_user'] = (string)$msgObj->ToUserName;
-			$data['created'] = (int)$msgObj->CreateTime;
-			$data['event'] = (string)$msgObj->Event;
-			$data['event_key'] = (string)$msgObj->EventKey;
-			if($msgObj->Event == 'subscribe' || $msgObj->Event == 'SCAN'){
-				$data['ticket'] = (string)$msgObj->Ticket;
-			}elseif($msgObj->Event == 'LOCATION'){
-				$data['loc_x'] = (double)$msgObj->Longitude;
-				$data['loc_y'] = (double)$msgObj->Latitude;
-				$data['prec'] = (double)$msgObj->Precision;
+			$data['from_user'] = $this->_wechat->getRevFrom();
+			$data['to_user'] = $this->_wechat->getRevTo();
+			$data['created'] = (int)$this->_wechat->getRevCtime();
+
+			$temp = $this->_wechat->getRevEvent();
+
+			$data['event'] = $temp['event'];
+			$data['event_key'] = $temp['key'];
+			if($temp['event'] == 'subscribe' || $temp['event'] == 'SCAN'){
+				$data['ticket'] = $this->_wechat->getRevTicket();
+			}elseif($temp['event'] == 'LOCATION'){
+				$temp = $this->_wechat->getRevEventGeo();
+				$data['loc_x'] = (double)$temp['x'];
+				$data['loc_y'] = (double)$temp['y'];
+				$data['prec'] = (double)$temp['precision'];
 			}
 
 			$model->add($data);
@@ -99,38 +88,38 @@ class MessageController extends Controller{
 			return false;
 		}else{
 			$model = M('WxUserMsg');
-			$data = $model->field('id')->find((float)$msgObj->MsgId);
+			$data = $model->field('id')->find($this->_wechat->getRevID());
 
 			if(!empty($data) || !$save){
 				return true;
 			}
 
-			$data['id'] = (float)$msgObj->MsgId;
-			$data['from_user'] = (string)$msgObj->FromUserName;
-			$data['to_user'] = (string)$msgObj->ToUserName;
-			$data['created'] = (int)$msgObj->CreateTime;
-			$data['msg_type'] = (string)$msgObj->MsgType;
+			$data['id'] = (float)$this->_wechat->getRevID();
+			$data['from_user'] = $this->_wechat->getRevFrom();
+			$data['to_user'] = $this->_wechat->getRevTo();
+			$data['created'] = (int)$this->_wechat->getRevCtime();
+			$data['msg_type'] = $this->_wechat->getRevType();
 
-			if($msgObj->MsgType == 'text'){
-				$data['content'] = (string)$msgObj->Content;
-			}elseif($msgObj->MsgType == 'image'){
-				$data['pic_url'] = (string)$msgObj->PicUrl;
-				$data['media_id'] = (string)$msgObj->MediaId;
-			}elseif($msgObj->MsgType == 'voice'){
-				$data['media_id'] = (string)$msgObj->MediaId;
-				$data['format'] = (string)$msgObj->Format;
-			}elseif($msgObj->MsgType == 'video'){
-				$data['media_id'] = (string)$msgObj->MediaId;
-				$data['thumb_media_id'] = (string)$msgObj->ThumbMediaId;
-			}elseif($msgObj->MsgType == 'location'){
-				$data['loc_x'] = (double)$msgObj->Location_X;
-				$data['loc_y'] = (double)$msgObj->Location_Y;
-				$data['scale'] = (int)$msgObj->Scale;
-				$data['content'] = (string)$msgObj->Label;
-			}elseif($msgObj->MsgType == 'link'){
-				$data['title'] = (string)$msgObj->Title;
-				$data['content'] = (string)$msgObj->Description;
-				$data['url'] = (string)$msgObj->Url;
+			if($data['msg_type'] == Wechat::MSGTYPE_TEXT){
+				$data['content'] = $this->_wechat->getRevContent();
+			}elseif($data['msg_type'] == Wechat::MSGTYPE_IMAGE){
+				$data['pic_url'] = $this->_wechat->getRevPic();
+				$data['media_id'] = $this->_wechat->getDataByKey('MediaId');
+			}elseif($data['msg_type'] == Wechat::MSGTYPE_VOICE){
+				$data['media_id'] = $this->_wechat->getDataByKey('MediaId');
+				$data['format'] = $this->_wechat->getDataByKey('Format');
+			}elseif($data['msg_type'] == Wechat::MSGTYPE_VIDEO){
+				$data['media_id'] = $this->_wechat->getDataByKey('MediaId');
+				$data['thumb_media_id'] = $this->_wechat->getDataByKey('ThumbMediaId');
+			}elseif($data['msg_type'] == Wechat::MSGTYPE_LOCATION){
+				$data['loc_x'] = (double)$this->_wechat->getDataByKey('Location_X');
+				$data['loc_y'] = (double)$this->_wechat->getDataByKey('Location_Y');
+				$data['scale'] = (int)$this->_wechat->getDataByKey('Scale');;
+				$data['content'] = $this->_wechat->getDataByKey('Label');;
+			}elseif($data['msg_type'] == Wechat::MSGTYPE_LINK){
+				$data['title'] = $this->_wechat->getDataByKey('Title');;
+				$data['content'] = $this->_wechat->getDataByKey('Description');
+				$data['url'] = $this->_wechat->getDataByKey('Url');
 			}
 
 			$model->add($data);
@@ -139,18 +128,8 @@ class MessageController extends Controller{
 
 	}
 
-	protected function executeText($wxid, $msgObj, $executor){
-		$now = time();
-
-		$result = "<xml>
-<ToUserName><![CDATA[{$msgObj->FromUserName}]]></ToUserName>
-<FromUserName><![CDATA[{$msgObj->ToUserName}]]></FromUserName>
-<CreateTime>$now</CreateTime>
-<MsgType><![CDATA[".$executor['type']."]]></MsgType>
-<Content><![CDATA[".$executor['content']."]]></Content>
-<FuncFlag>0</FuncFlag>
-</xml>";
-		return $result;
+	protected function executeText($wxid, $executor){
+		return $this->_wechat->text($executor['content'])->reply(true);
 	}
 
 	protected function executeNews($wxid, $msgObj, $executor){
@@ -165,32 +144,19 @@ class MessageController extends Controller{
 			return false;
 		}
 
-		$now = time();
-
-		$result = "<xml>
-<ToUserName><![CDATA[{$msgObj->FromUserName}]]></ToUserName>
-<FromUserName><![CDATA[{$msgObj->ToUserName}]]></FromUserName>
-<CreateTime>$now</CreateTime>
-<MsgType><![CDATA[".$executor['type']."]]></MsgType>
-<ArticleCount>".count($items)."</ArticleCount>
-<Articles>";
-
-		foreach($items as $item){
-			$result .= "<item>
-<Title><![CDATA[".$item['title']."]]></Title>
-<Description><![CDATA[".$item['desc_txt']."]]></Description>
-<PicUrl><![CDATA[".$item['pic_url']."]]></PicUrl>
-<Url><![CDATA[".$item['url']."]]></Url>
-</item>";
+		$articles = array();
+		foreach ($items as $key => $value) {
+			if($key == 'title'){
+				$articles['Title'] = $value;
+			}elseif($key == 'desc_txt'){
+				$articles['Description'] = $value;
+			}elseif($key == 'pic_url'){
+				$articles['PicUrl'] = $value;
+			}elseif($key == 'url'){
+				$articles['Url'] = $value;
+			}
 		}
 
-		$result.="</Articles></xml>";
-
-		return $result;
-	}
-
-	public function tttttt(){
-		$Model = M('WxUserMsg');
-		$data = $Model->field('id')->find(11);
+		return $this->_wechat->news($articles)->replay(true);
 	}
 }

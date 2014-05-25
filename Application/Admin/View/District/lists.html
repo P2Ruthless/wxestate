@@ -1,0 +1,76 @@
+<extend name="Public/base"/>
+
+<block name="body">
+    <div class="main-title">
+        <h2>区域管理
+            <volist name="parentDistrict.rootPath" id="districtNode">
+            [<a href="{:U('lists', array('pid'=>$districtNode['id']))}">{$districtNode.name}</a>]
+            </volist>
+        </h2>
+    </div>
+
+    <div class="cf">
+        <a class="btn" href="{:U('add',array('pid'=>$parentDistrict['id']))}">新 增</a>
+        <neq name="parentDistrict.id" value="1">
+        <a class="btn" href="{:U('lists', array('pid'=>$parentDistrict['pid']))}">返回上级</a>
+        <a class="btn" href="{:U('lists', array('pid'=>1))}">返回顶级</a>
+        </neq>
+    </div>
+    <div class="data-table table-striped">
+        <form class="ids">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th>失效</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <notempty name="parentDistrict.children">
+                <volist name="parentDistrict.children" id="district">
+                    <tr>
+                        <td>{$district.id}</td>
+                        <td>
+                            <if condition="$district['type'] eq 4">
+                            {$district.name}
+                            <else/>
+                            <a href="{:U('lists', array('pid'=>$district['id']))}">{$district.name}</a>
+                            </if>
+                        </td>
+                        <td>{$district.type|get_lookup_value='DISTRICT_TYPE',###}</td>
+                        <td>
+                            <if condition="$district['inactive'] eq 'N'">
+                            <a href="{:U('changeState', array('id'=>$district['id'], 'state'=>'Y'))}" class="ajax-get">否</a>
+                            <else/>
+                            <a href="{:U('changeState', array('id'=>$district['id'], 'state'=>'N'))}" class="ajax-get">是</a>
+                            </if>
+                        </td>
+                        <td>
+                            <a title="编辑" href="{:U('edit', array('id'=>$district['id']))}">编辑</a>
+                        </td>
+                    </tr>
+                </volist>
+                <else/>
+                <td colspan="10" class="text-center"> aOh! 暂时还没有内容! </td>
+                </notempty>
+                </tbody>
+            </table>
+        </form>
+        <!-- 分页 -->
+        <div class="page">
+
+        </div>
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript">
+    $(function() {
+        //导航高亮
+        highlight_subnav('{:U('lists')}');
+    });
+    </script>
+</block>
