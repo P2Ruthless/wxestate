@@ -88,7 +88,8 @@ class Cx extends TagLib {
         }else{
             $parseStr .= ' $__LIST__ = '.$name.';';
         }
-        $parseStr .= 'if( count($__LIST__)==0 ) : echo "'.$empty.'" ;';
+        $parseStr .= '$voCount = count($__LIST__);';
+        $parseStr .= 'if( $voCount==0 ) : echo "'.$empty.'" ;';
         $parseStr .= 'else: ';
         $parseStr .= 'foreach($__LIST__ as $key=>$'.$id.'): ';
         $parseStr .= '$mod = ($'.$key.' % '.$mod.' );';
