@@ -32,6 +32,11 @@ class HomeController extends Controller {
         if(!C('WEB_SITE_CLOSE')){
             $this->error('站点维护中，请稍后访问~');
         }
+
+        //默认SEO信息
+        $this->site_title = C('WEB_SITE_TITLE');
+        $this->site_keywords = C('WEB_SITE_KEYWORD');
+        $this->site_description = C('WEB_SITE_DESCRIPTION');
     }
 
 	/* 用户登录检测 */

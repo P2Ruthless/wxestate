@@ -33,6 +33,7 @@ class IndexController extends HomeController {
 
         cookie('city', $city['id'], 30 * 24 * 60 * 60);
 
+        $this->assign('currentNav', 1);
         $this->assign('city', $city);
         
         $this->display();
