@@ -35,7 +35,7 @@ class IndexController extends HomeController {
 
         $this->assign('city', $city);
         
-        $this->display('cityIndex');
+        $this->display();
     }
 
     public function cityIndex($city){
