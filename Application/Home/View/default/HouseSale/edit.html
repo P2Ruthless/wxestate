@@ -1,0 +1,99 @@
+<extend name="Public/base"/>
+
+<block name="content">
+<form>
+	<label for="title">标题<span class="require">*</span></label>
+	<input type="text" id="title" name="title" value="{$data.title}"/>
+	<br/>
+
+	<label for="community">小区<span class="require">*</span></label>
+	<input type="text" id="community" name="community" value="{$data.community}"/>
+	<br/>
+	
+	<label>区域
+	{:W('District/showSelect', array(get_current_city()))}
+	</label>
+	<br/>
+
+	<label>户型<span class="require">*</span>
+	<input type="text" name="bed_room" value="{$data.bed_room}"/>室
+	<input type="text" name="live_room" value="{$data.live_room}"/>厅
+	<input type="text" name="toilet" value="{$data.toilet}"/>卫
+	</label>
+	<br/>
+
+	<label for="community">楼层<span class="require">*</span>
+	第<input type="text" name="floor" value="{$data.floor}"/>层
+	共<input type="text" name="floor_max" value="{$data.floor_max}"/>层
+	</label>
+	<br/>
+
+	<label for="contact_type">身份</label>
+	{:W('Lookup/showSelect', array('contact_type', $data.contact_type, 'HOUSE_CONTACT_TYPE', false, array('id'=>'contact_type')))}
+	<br/>
+
+	<label for="contact">联系人<span class="require">*</span></label>
+	<input type="text" id="contact" name="contact" value="{$data.contact}"/>
+	<br/>
+
+	<label for="contact_tel">联系电话<span class="require">*</span></label>
+	<input type="text" id="contact_tel" name="contact_tel" value="{$data.contact_tel}"/>
+	<br/>
+
+	<label>建筑类型
+	{:W('Lookup/showSelect', array('build_type', $data.build_type, 'HOUSE_BUILD_TYPE', false, array('id'=>'build_type')))}
+	{:W('Lookup/showSelect', array('structure', $data.structure, 'HOUSE_STRUCTURE_TYPE', false, array('id'=>'structure')))}
+	{:W('Lookup/showSelect', array('decorate', $data.decorate, 'HOUSE_DECORATE_TYPE', false, array('id'=>'decorate')))}
+	{:W('Lookup/showSelect', array('face', $data.face, 'HOUSE_FACE_TYPE', false, array('id'=>'face')))}
+	</label>
+	<br/>
+
+	<label for="add_on">配套设施</label>
+	<input type="text" id="add_on" name="add_on" value="{$data.add_on}"/>
+	<br/>
+
+	<label for="feature">特色</label>
+	<input type="text" id="feature" name="feature" value="{$data.feature}"/>
+	<br/>
+
+	<label for="desc_txt">描述</label>
+	<textarea id="desc_txt" name="desc_txt">{$data.desc_txt}</textarea>
+	<br/>
+
+	<label for="price">价格</label>
+	<input type="text" id="price" name="price" value="{$data.price}"/>万元
+	<br/>
+
+	<label for="square">建筑面积</label>
+	<input type="text" id="square" name="square" value="{$data.square}"/>
+	<label for="inner_square">套内面积</label>
+	<input type="text" id="inner_square" name="inner_square" value="{$data.inner_square}"/>
+	<br/>
+
+	<label for="loan_enable">不可贷款</label>
+	<input type="checkbox" value="N" />
+	<br/>
+
+	<label for="down_payment">首付</label>
+	<input type="text" name="down_payment" value="{$data.down_payment}" />
+	<br/>
+
+	<label for="monthly">月供</label>
+	<input type="text" name="monthly" value="{$data.monthly}" />
+	<br/>
+
+	<label for="property_right">产权</label>
+	{:W('Lookup/showSelect', array('property_right', $data.property_right, 'HOUSE_PROPERTY_RIGHT', false, array('id'=>'property_right')))}
+	<br/>
+
+	<label for="property_type">产权类型</label>
+	{:W('Lookup/showSelect', array('property_type', $data.property_type, 'HOUSE_PROPERTY_TYPE', false, array('id'=>'property_type')))}
+	<br/>
+
+	<label for="build_year">建筑年代</label>
+	<input type="text" name="build_year" value="{$data.build_year}" />
+	<br/>
+
+	<input type="submit" value="发布"/>
+</form>
+</block>

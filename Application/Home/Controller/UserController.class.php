@@ -103,7 +103,11 @@ class UserController extends HomeController
 
         } else { //显示登录表单
             if (is_login()) {
-                redirect(U('Weibo/Index/index'));
+                $returnUrl = cookie('__return_url__');
+                if(empty($returnUrl)){
+                    $returnUrl = U('Home/Index/index');
+                }
+                redirect($returnUrl);
             }
             $this->display();
         }
