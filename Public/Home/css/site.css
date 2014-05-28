@@ -594,3 +594,8 @@ a.hotlp_lpname:hover{
 	color: #d62a38;
 	
 }
+
+/*styles for form*/
+label > span.require{
+	color: red;
+}
