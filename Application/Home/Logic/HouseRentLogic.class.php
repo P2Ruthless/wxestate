@@ -47,6 +47,28 @@ class HouseRentLogic extends BaseLogic{
 		return true;
 	}
 
+	/**
+	 * 获取首页的
+	 */
+	public function listsForIndex($city, $count = 4){
+		return $this->field('hr.id,hr.thumbnail,hr.bed_room,hr.live_room,hr.decorate,hr.price,area.name area_name,busi_area.name busi_area_name')
+			->alias('hr')
+			->join('to_document doc on hr.id=doc.id')
+			->join('to_district area on hr.area=area.id', 'LEFT')
+			->join('to_district busi_area on hr.busi_area=busi_area.id', 'LEFT')
+			->where(array(
+				'doc.status'=>1,
+				'doc.category_id'=>10001,
+				'doc.create_time'=>array('lt', NOW_TIME),
+				'deadline=0 OR deadline>'.NOW_TIME,
+				'doc.position & 4 = 4',
+				'hr.city'=> is_array($city) ? $city['id'] : $city
+			))
+			->order('id desc')
+			->limit($count)
+			->select();
+	}
+
 	protected function checkBedRoom($data){
 		if($data['rent_type'] == 1){
 			return !empty($data['bed_room']);

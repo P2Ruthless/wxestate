@@ -28,7 +28,7 @@
 		</div>
 		<div class="clear"></div>
 		<div class="nav_box">
-			<think:nav name="nav">
+			<think:nav name="nav" field="id,pid,title,url,target">
 			<eq name="nav.pid" value="0">
 			<li>
 				<a <eq name="currentNav" value="$nav.id">class="navnow"</eq> href="{$nav.url|get_nav_url}" target="<eq name='nav.target' value='1'>_blank<else/>_self</eq>">{$nav.title}</a>

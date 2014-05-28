@@ -31,8 +31,14 @@ class IndexController extends HomeController {
         */
         $city = get_current_city();
 
+        //获取city下房屋买卖首页推荐 最多4条
+
+        //获取city下房屋租赁首页推荐 最多4条
+        $houseRentList = D('HouseRent', 'Logic')->listsForIndex($city, 4);
+
         cookie('city', $city['id'], 30 * 24 * 60 * 60);
 
+        $this->assign('houseRentList', $houseRentList);
         $this->assign('currentNav', 1);
         $this->assign('city', $city);
         
