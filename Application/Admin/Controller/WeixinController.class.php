@@ -111,4 +111,67 @@ class WeixinController extends AdminController{
 
 		$this->display();
 	}
+
+	//Weixin menu add
+	public function addMenu($account = '0'){
+		if(IS_POST){
+			if($_POST['pid'] == -1){
+				$_POST['type'] = 'parent';
+			}
+			if ($_POST['type'] == 'parent') {
+				$_POST['level'] = 1;
+			}else{
+				$_POST['level'] = 2;
+			}
+			$WxMenu = D('WxMenu');
+			$menu = $WxMenu->create();
+			if($menu){
+				$WxMenu->add();
+				$this->success('添加成功', U('Weixin/accountMenu'));
+			}else{
+				$this->error($WxMenu->getError());
+			}
+		}else{
+			$this->assign('account_id',$account);
+			$wxmenus = M('WxMenu')->field(true)->where('pid = -1')->select();
+            $this->assign('WxMenus', $wxmenus);
+			$this->display('editMenu');
+		}	
+	}
+	//weixin menu edit
+	public function editMenu($id,$account = '0'){
+		$WxMenu = D('WxMenu');
+
+		if(IS_POST){
+			$menu = $WxMenu->create();
+			if($menu){
+				$WxMenu->save();
+				$this->success('更新成功', U('Weixin/accountMenu'));
+			}else{
+				$this->error($WxMenu->getError());
+			}
+		}else{
+			$menu = $WxMenu->find($id);
+
+			if(empty($menu)){
+				$this->error('记录不存在');
+			}
+			$this->assign('wxmenu', $menu);
+			$this->assign('account_id',$account);
+			$wxmenus = M('WxMenu')->field(true)->where('pid = -1')->select();
+            $this->assign('WxMenus', $wxmenus);
+			$this->display();
+		}
+	}
+	//weixin menu delete
+	public function deleteMenu($id,$level='2'){
+		$WxMenu = D('WxMenu');
+		if($level == 1){
+			$WxMenu->where('pid = '.$id)->delete();
+			$WxMenu->delete($id);
+		}else{
+			$WxMenu->delete($id);
+		}
+		$this->success('删除成功', U('Weixin/accountMenu'));
+	}
 }

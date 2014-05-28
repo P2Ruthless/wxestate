@@ -1,0 +1,65 @@
+<extend name="Public/base" />
+<extend name="Public/base" />
+
+<block name="body">
+	<div class="main-title cf">
+		<h2><if condition="ACTION_NAME eq 'addmenu'">新增<else/>编辑</if>微信菜单</h2>
+	</div>
+	<!-- 表单 -->
+	<form id="form" action="<if condition="ACTION_NAME eq 'addmenu'">{:U('addMenu')}<else/>{:U('editMenu')}</if>" method="post" class="form-horizontal">
+		<div class="form-item cf">
+			<label class="item-label">微信号</label>
+			<div class="controls">
+				<input type="text" class="text input-large" name="account_id" value="{$account_id}" readOnly>
+			</div>
+		</div>
+		<div class="form-item cf">
+			<div class="controls">
+				<input type="hidden" class="text input-large" name="id" value="{$wxmenu.id}" readOnly>
+			</div>
+		</div>
+		
+		<div class="form-item cf">
+			<label class="item-label">名称</label>
+			<div class="controls">
+				<input type="text" class="text input-large" name="name" value="{$wxmenu.name}">
+			</div>
+		</div>
+		<div class="form-item cf">
+			<label>上级菜单（所属的上级菜单）</label>
+			<div class="controls">
+				<select name="pid">
+					<option value="-1" <eq name="wxmenu.pid" value="-1">selected</eq>>顶级菜单</option>
+                    <volist name="WxMenus" id="cmenu">
+                        <option value="{$cmenu.id}" <eq name="wxmenu.pid" value="$cmenu.id">selected</eq>>{$cmenu.name}</option>
+                    </volist>
+                </select>
+			</div>
+		</div>
+		<div class="form-item cf">
+			<label class="item-label">类型</label>
+			<select name="type">
+                    <option value="click" <eq name="wxmenu.type" value="click">selected</eq>>click</option>
+                    <option value="view" <eq name="wxmenu.type" value="view">selected</eq>>view</option>
+                    <option value="parent" <eq name="wxmenu.type" value="parent">selected</eq>>parent</option>
+            </select>
+		</div>
+		<div class="form-item cf">
+			<label class="item-label">url</label>
+			<div class="controls">
+				<input type="text" class="text input-large" name="url" value="{$wxmenu.url}">
+			</div>
+		</div>
+
+		<div class="form-item">
+			<button type="submit" class="btn submit-btn ajax-post" target-form="form-horizontal">确 定</button>
+			<button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+		</div>
+	</form>
+</block>
+
+<block name="script">
+<script type="text/javascript">
+    highlight_subnav('{:U('Weixin/accountMenu')}');
+</script>
+</block>

@@ -41,20 +41,20 @@
 				<notempty name="dataList">
 				<volist name="dataList" id="data">
 				<tr>
-					<td><a href="{:U('Weixin/editMenu', array('id'=>$data['id']))}">{$data.name}</a></td>
+					<td><a href="{:U('Weixin/editMenu', array('id'=>$data['id'],'account'=>$data['account_id']))}">{$data.name}</a></td>
 					<td>{$data.type}</td>
 					<td>{$data.url}</td>
 					<td>
-						<a href="{:U('Weixin/deleteAccount', array('id'=>$data['id']))}" class="confirm ajax-get">删除</a>
+						<a href="{:U('Weixin/deleteMenu', array('id'=>$data['id'],'level'=>$data['level']))}" class="confirm ajax-get">删除</a>
 					</td>
 				</tr>
 					<volist name="data._child" id="data">
 					<tr>
-						<td class="sub-menu"><a href="{:U('Weixin/editMenu', array('id'=>$data['id']))}">{$data.name}</a></td>
+						<td class="sub-menu"><a href="{:U('Weixin/editMenu', array('id'=>$data['id'],'account'=>$data['account_id']))}">{$data.name}</a></td>
 						<td>{$data.type}</td>
 						<td>{$data.url}</td>
 						<td>
-							<a href="{:U('Weixin/deleteAccount', array('id'=>$data['id']))}" class="confirm ajax-get">删除</a>
+							<a href="{:U('Weixin/deleteMenu', array('id'=>$data['id']))}" class="confirm ajax-get">删除</a>
 						</td>
 					</tr>
 					</volist>
@@ -72,7 +72,7 @@
 <script type="text/javascript">
 $(function(){
 	$('#account_list').change(function(){
-		window.location.href = Think.U('Admin/Weixin/accountMenu', {'account':this.value});
+		window.location.href = Think.U('Admin/Weixin/account', {'account':this.value});
 	});
 	highlight_subnav("{:U('Admin/Weixin/accountMenu')}");
 });
