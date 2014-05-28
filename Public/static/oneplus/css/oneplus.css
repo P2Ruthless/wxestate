@@ -360,7 +360,7 @@ h2 {
   height: 49px;
   cursor: pointer;
   display: none;
-  background: url(../../../Home/images/oneplus/gotop.png);
+  background: url(../../../Home/images/gotop.png);
 }
 #goTopBtn:hover {
   background-position: 48px 0;

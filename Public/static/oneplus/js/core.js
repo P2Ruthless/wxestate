@@ -3,9 +3,10 @@
  */
 
 /**应用初始化
+ *
  */
 $(function () {
-    ucard();//绑定用户小名片
+    //ucard();//绑定用户小名片
     bindGoTop();//回到顶部
     //checkMessage();//检查一次消息
 
@@ -14,6 +15,7 @@ $(function () {
     }
     //bindLogout();
 });
+
 
 function is_login() {
     return parseInt(MID);
