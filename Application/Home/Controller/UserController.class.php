@@ -49,6 +49,7 @@ class UserController extends HomeController
             $User = new UserApi;
             $uid = $User->register($username, $password, $email);
             if (0 < $uid) { //注册成功
+
                 $this->success('成功注册,正在转入登录页面！', U('login'));
             } else { //注册失败，显示错误信息
                 $this->error($this->showRegError($uid));
@@ -56,7 +57,7 @@ class UserController extends HomeController
 
         } else { //显示注册表单
             if (is_login()) {
-                redirect(U('Weibo/Index/index'));
+                redirect(U('Index/index'));
             }
             $this->display();
         }
@@ -71,6 +72,12 @@ class UserController extends HomeController
                 if (!check_verify($verify)) {
                     $this->error('验证码输入错误12');
                 }
+            }
+
+            $username = trim($username);
+
+            if(empty($username) || empty($password)){
+                $this->error('请填写用户名和密码');
             }
 
             /* 调用UC登录接口登录 */
@@ -102,13 +109,15 @@ class UserController extends HomeController
             }
 
         } else { //显示登录表单
+            $returnUrl = cookie('__return_url__');
+            if(empty($returnUrl)){
+                $returnUrl = U('Home/Index/index');
+            }
             if (is_login()) {
-                $returnUrl = cookie('__return_url__');
-                if(empty($returnUrl)){
-                    $returnUrl = U('Home/Index/index');
-                }
                 redirect($returnUrl);
             }
+
+            $this->assign('returnUrl', $returnUrl);
             $this->display();
         }
     }
@@ -118,9 +127,9 @@ class UserController extends HomeController
     {
         if (is_login()) {
             D('Member')->logout();
-            $this->success('退出成功！', U('User/login'));
+            $this->success('退出成功！', U('Index/index'));
         } else {
-            $this->redirect('User/login');
+            $this->redirect('Index/index');
         }
     }
 

@@ -1,12 +1,50 @@
 <extend name="Public/base"/>
 
+<block name="style">
+<link type="text/css" rel="stylesheet" href="__STATIC__/qtip/jquery.qtip.css"/>
+<link type="text/css" rel="stylesheet" href="__STATIC__/oneplus/js/ext/toastr/toastr.min.css"/>
+<style type="text/css">
+.log-in{
+	background: url(__IMG__/login_btn_disabled.png);
+}
+</style>
+</block>
+
 <block name="headscript">
-<script type="text/javascript" src="__STATIC__/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="__STATIC__/qtip/jquery.qtip.js"></script>
+<script type="text/javascript" src="__STATIC__/oneplus/js/ext/toastr/toastr.min.js"></script>
+
 <script type="text/javascript">
 $(function(){
 	$(document).ajaxStart(function(){
-		$('')
-	})
+		$("button#login_submit").text('正在登录').addClass("log-in").attr("disabled", true);
+	}).ajaxStop(function(){
+		$("button#login_submit").text('登 录').removeClass("log-in").attr("disabled", false);
+	});
+	$("form").submit(function () {
+		var username = $('#username').val();
+		var password = $('#password').val();
+		if(username == '' || password == ''){
+			op_error('请填写用户名和密码', '提示');
+			return false;
+		}
+		var self = $(this);
+		$.post(self.attr("action"), self.serialize(), success, "json");
+			return false;
+		function success(data) {
+			if (data.status) {
+				op_success('欢迎回来，正在跳转登录前页面。', '温馨提示');
+				setTimeout(function () {
+					window.location.href = "{$returnUrl}";
+				}, 1500);
+			} else {
+				op_error(data.info, '温馨提示');
+				//self.find(".Validform_checktip").text(data.info);
+				//刷新验证码
+				$(".reloadverify").click();
+			}
+		}
+	});
 });
 </script>
 </block>
@@ -21,7 +59,7 @@ $(function(){
 			<tr>
 				<td width="25%" align="left">用户名：</td>
 				<td width="75%" align="left">
-					<input type="text" class="input_text" id="inputEmail"/>
+					<input type="text" class="input_text" id="username" name="username"/>
 				</td>
 			</tr>
 			<tr>
@@ -31,7 +69,7 @@ $(function(){
 			<tr>
 				<td align="left">密码：</td>
 				<td align="left">
-					<input type="password" class="input_text" id="inputPassword"/>
+					<input type="password" class="input_text" id="password" name="password"/>
 				</td>
 			</tr>
 			<tr>
@@ -44,7 +82,7 @@ $(function(){
 			</tr>
 			<tr>
 				<td align="left">&nbsp;</td>
-				<td align="right"><a href="javascript:;" class="login_btn">登 陆</a></td>
+				<td align="right"><button id="login_submit" type="submit" class="login_btn" style="border:none;cursor:pointer">登 陆</button></td>
 			</tr>
 		</table>
 		</form>
@@ -52,7 +90,7 @@ $(function(){
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td>你还没有成为恒润的用户吗？</td>
-					<td><a href="#" class="tosg_btn"></a></td>
+					<td><a href="{:U('User/register')}" class="tosg_btn"></a></td>
 				</tr>
 			</table>
 		</div>
