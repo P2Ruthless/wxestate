@@ -1,99 +1,238 @@
 <extend name="Public/base"/>
 
+<block name="style">
+<link type="text/css" rel="stylesheet" href="__STATIC__/qtip/jquery.qtip.css"/>
+<link type="text/css" rel="stylesheet" href="__STATIC__/oneplus/js/ext/toastr/toastr.min.css"/>
+<style type="text/css">
+div.content_box{
+	text-align: left;
+}
+.form-group{
+	margin-bottom: 10px;
+}
+label .require{
+	color: red;
+}
+input.short{
+	width: 50px;
+}
+.log-in{
+	background: url(__IMG__/login_btn_disabled.png);
+}
+</style>
+</block>
+
+<block name="headscript">
+<script type="text/javascript" src="__STATIC__/jquery.chained.min.js"></script>
+<script type="text/javascript" src="__STATIC__/uploadify/jquery.uploadify.mymin.js"></script>
+<script type="text/javascript" src="__STATIC__/scripts/imageexplorer.js"></script>
+<script type="text/javascript" src="__STATIC__/qtip/jquery.qtip.js"></script>
+<script type="text/javascript" src="__STATIC__/oneplus/js/ext/toastr/toastr.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	$("#busi_area").chained("#area");
+
+	var imgExplorer = new ImageExplorer({container: '#img_box', picsHolder: '#house_pic', column: 8});
+
+	$("#house_pic_file").uploadify({
+		'height': 34,
+		'swf': '__STATIC__/uploadify/uploadify.swf',
+		'uploader': "{:U('File/uploadHousePics')}",
+		'fileObjName': 'fileUpload',
+		'buttonClass': 'btn btn-primary',
+		'multi': true,
+		'queueID': 'queue_container',
+		'uploadLimit': 8,
+		//'queueSizeLimit': 5,
+		'fileSizeLimit': '2MB',
+		'buttonText': '上传图片',
+		'fileTypeExts': '*.jpg; *.png; *.gif; *.bmp',
+		'fileTypeDesc': 'JPG,PNG,GIF,BMP',
+		'removeTimeout': 1,
+		'formData': {'PHPSESSID': '<?php echo session_id();?>'},
+		'onUploadSuccess': function(file, data, response){
+			var info = $.parseJSON(data);
+			if(info.status == 1){
+				imgExplorer.addItem(info);
+			}else{
+				alert(info.info);
+			}
+		},
+		'onUploadError': function(file, errorCode, errorMsg, errorString){
+			//alert(file.name + " 上传失败 " + errorCode + " " + errorMsg + " " + errorString);
+		},
+		'onFallback': function(){
+			alert('请先安装Flash插件');
+		}
+	});
+
+	$(document).ajaxStart(function(){
+		$("button#login_submit").text('正在提交').addClass("log-in").attr("disabled", true);
+	}).ajaxStop(function(){
+		$("button#login_submit").text('发 布').removeClass("log-in").attr("disabled", false);
+	});
+	$("form").submit(function () {
+		var username = $('#username').val();
+		var password = $('#password').val();
+		if(username == '' || password == ''){
+			op_error('请填写用户名和密码', '提示');
+			return false;
+		}
+		if(editor){
+			editor.sync();
+		}
+		var self = $(this);
+		$.post(self.attr("action"), self.serialize(), success, "json");
+			return false;
+		function success(data) {
+			if (data.status) {
+				op_success('欢迎回来，正在跳转登录前页面。', '温馨提示');
+				setTimeout(function () {
+					window.location.href = "{$returnUrl}";
+				}, 1500);
+			} else {
+				op_error(data.info, '温馨提示');
+				//self.find(".Validform_checktip").text(data.info);
+				//刷新验证码
+				$(".reloadverify").click();
+			}
+		}
+	});
+});
+</script>
+</block>
+
 <block name="content">
-<form>
-	<label for="title">标题<span class="require">*</span></label>
-	<input type="text" id="title" name="title" value="{$data.title}"/>
-	<br/>
-
-	<label for="community">小区<span class="require">*</span></label>
-	<input type="text" id="community" name="community" value="{$data.community}"/>
-	<br/>
+<h1>房屋买卖 - 添加</h1>
+<br /><br />
+<form action="{:U('HouseSale/update')}" method="post">
+	<if condition="isset($data['id'])">
+	<input type="hidden" name="id" value="{$info.id}"/>
+	</if>
+	<input type="hidden" name="pid" value="{$data.pid|default=''}"/>
+	<input type="hidden" name="model_id" value="{$data.model_id|default=''}"/>
+	<input type="hidden" name="category_id" value="{$data.category_id|default=''}">
+	<input type="hidden" name="type" value="{$data.doc_type}"/>
+	<input type="hidden" name="description" value=""/>
+	<input type="hidden" name="city" value="{$data.city.id}"/>
+	<div class="form-group">
+		<label for="title">标题<span class="require">*</span></label>
+		<input type="text" id="title" name="title" value="{$data.title}"/>
+	</div>
 	
-	<label>区域
-	{:W('District/showSelect', array(get_current_city()))}
-	</label>
-	<br/>
+	<div class="form-group">
+		<label>区域
+		{:W('District/showSelect', array(get_current_city()))}
+		</label>
+	</div>
 
-	<label>户型<span class="require">*</span>
-	<input type="text" name="bed_room" value="{$data.bed_room}"/>室
-	<input type="text" name="live_room" value="{$data.live_room}"/>厅
-	<input type="text" name="toilet" value="{$data.toilet}"/>卫
-	</label>
-	<br/>
+	<div class="form-group">
+		<label for="community">小区<span class="require">*</span></label>
+		<input type="text" id="community" name="community" value="{$data.community|default=''}"/>
+	</div>
 
-	<label for="community">楼层<span class="require">*</span>
-	第<input type="text" name="floor" value="{$data.floor}"/>层
-	共<input type="text" name="floor_max" value="{$data.floor_max}"/>层
-	</label>
-	<br/>
+	<div class="form-group">
+		<label>户型<span class="require">*</span>
+		<input type="text" name="bed_room" value="{$data.bed_room|default=''}" class="short"/>室
+		<input type="text" name="live_room" value="{$data.live_room|default=''}" class="short"/>厅
+		<input type="text" name="toilet" value="{$data.toilet|default=''}" class="short"/>卫
+		</label>
+	</div>
 
-	<label for="contact_type">身份</label>
-	{:W('Lookup/showSelect', array('contact_type', $data.contact_type, 'HOUSE_CONTACT_TYPE', false, array('id'=>'contact_type')))}
-	<br/>
+	<div class="form-group">
+		<label for="community">楼层<span class="require">*</span>
+		第<input type="text" name="floor" value="{$data.floor|default=''}" class="short"/>层
+		共<input type="text" name="floor_max" value="{$data.floor_max|default=''}" class="short"/>层
+		</label>
+	</div>
 
-	<label for="contact">联系人<span class="require">*</span></label>
-	<input type="text" id="contact" name="contact" value="{$data.contact}"/>
-	<br/>
+	<div class="form-group">
+		<label>建筑类型
+		{:W('Lookup/showSelect', array('build_type', $data.build_type, 'HOUSE_BUILD_TYPE', false, array('id'=>'build_type')))}
+		{:W('Lookup/showSelect', array('structure', $data.structure, 'HOUSE_STRUCTURE_TYPE', array('name'=>'0', 'val'=>'建筑结构'), array('id'=>'structure')))}
+		{:W('Lookup/showSelect', array('decorate', $data.decorate, 'HOUSE_DECORATE_TYPE', array('name'=>'0', 'val'=>'装修'), array('id'=>'decorate')))}
+		{:W('Lookup/showSelect', array('face', $data.face, 'HOUSE_FACE_TYPE', array('name'=>'0', 'val'=>'朝向'), array('id'=>'face')))}
+		</label>
+	</div>
 
-	<label for="contact_tel">联系电话<span class="require">*</span></label>
-	<input type="text" id="contact_tel" name="contact_tel" value="{$data.contact_tel}"/>
-	<br/>
+	<div class="form-group">
+		<label for="price">价格</label>
+		<input type="text" id="price" name="price" value="{$data.price|default=''}" class="short"/>万元
+		<label for="loan_enable">
+			<input type="checkbox" value="N" />
+			不可贷款
+		</label>
+	</div>
 
-	<label>建筑类型
-	{:W('Lookup/showSelect', array('build_type', $data.build_type, 'HOUSE_BUILD_TYPE', false, array('id'=>'build_type')))}
-	{:W('Lookup/showSelect', array('structure', $data.structure, 'HOUSE_STRUCTURE_TYPE', false, array('id'=>'structure')))}
-	{:W('Lookup/showSelect', array('decorate', $data.decorate, 'HOUSE_DECORATE_TYPE', false, array('id'=>'decorate')))}
-	{:W('Lookup/showSelect', array('face', $data.face, 'HOUSE_FACE_TYPE', false, array('id'=>'face')))}
-	</label>
-	<br/>
+	<div class="form-group">
+		<label for="square">建筑面积</label>
+		<input type="text" id="square" name="square" value="{$data.square|default=''}" class="short"/> m<sup>2</sup>
+		<label for="inner_square">套内面积</label>
+		<input type="text" id="inner_square" name="inner_square" value="{$data.inner_square|default=''}" class="short"/> m<sup>2</sup>
+	</div>
 
-	<label for="add_on">配套设施</label>
-	<input type="text" id="add_on" name="add_on" value="{$data.add_on}"/>
-	<br/>
+	<div class="form-group">
+		<label for="down_payment">首付</label>
+		<input type="text" name="down_payment" value="{$data.down_payment|default=''}" class="short"/>万元
+		<label for="monthly">月供</label>
+		<input type="text" name="monthly" value="{$data.monthly|default=''}" class="short"/>元
+	</div>
 
-	<label for="feature">特色</label>
-	<input type="text" id="feature" name="feature" value="{$data.feature}"/>
-	<br/>
+	<div class="form-group">
+		<label for="property_right">产权</label>
+		{:W('Lookup/showSelect', array('property_right', $data.property_right, 'HOUSE_PROPERTY_RIGHT', false, array('id'=>'property_right')))}
+		<label for="property_type">产权类型</label>
+		{:W('Lookup/showSelect', array('property_type', $data.property_type, 'HOUSE_PROPERTY_TYPE', false, array('id'=>'property_type')))}
+	</div>
 
-	<label for="desc_txt">描述</label>
-	<textarea id="desc_txt" name="desc_txt">{$data.desc_txt}</textarea>
-	<br/>
+	<div class="form-group">
+		<label for="build_year">建筑年代</label>
+		<input type="text" name="build_year" value="{$data.build_year|default=''}" />
+	</div>
 
-	<label for="price">价格</label>
-	<input type="text" id="price" name="price" value="{$data.price}"/>万元
-	<br/>
+	<div class="form-group">
+		<label for="add_on">配套设施</label>
+		<input type="text" id="add_on" name="add_on" value="{$data.add_on|default=''}"/>
+	</div>
 
-	<label for="square">建筑面积</label>
-	<input type="text" id="square" name="square" value="{$data.square}"/>
-	<label for="inner_square">套内面积</label>
-	<input type="text" id="inner_square" name="inner_square" value="{$data.inner_square}"/>
-	<br/>
+	<div class="form-group">
+		<label for="feature">特色</label>
+		<input type="text" id="feature" name="feature" value="{$data.feature|default=''}"/>
+	</div>
 
-	<label for="loan_enable">不可贷款</label>
-	<input type="checkbox" value="N" />
-	<br/>
+	<div class="form-group">
+		<label for="desc_txt">房源描述</label>
+		<textarea id="desc_txt" name="desc_txt">{$data.desc_txt|default=''}</textarea>
+		{:hook('documentEditFormContent',array('id'=>'desc_txt', name=>'desc_txt','value'=>htmlspecialchars($data['desc_txt'])))}
+	</div>
 
-	<label for="down_payment">首付</label>
-	<input type="text" name="down_payment" value="{$data.down_payment}" />
-	<br/>
+	<div id="house_pic_upload ">
+		<div id="img_explorer"></div>
+		<input type="file" id="house_pic_file"/>
+		<input type="hidden" id="house_pic" name="house_pic" value='{$data.house_pic|default="[]"}'/>
+		<div id="img_box"></div>
+		
+		<div id="queue_container"></div>
+	</div>
+	<div class="clear form-group"></div>
 
-	<label for="monthly">月供</label>
-	<input type="text" name="monthly" value="{$data.monthly}" />
-	<br/>
+	<div class="form-group">
+		<label for="contact_type">身份</label>
+		{:W('Lookup/showSelect', array('contact_type', $data.contact_type, 'HOUSE_CONTACT_TYPE', false, array('id'=>'contact_type')))}
+	</div>
 
-	<label for="property_right">产权</label>
-	{:W('Lookup/showSelect', array('property_right', $data.property_right, 'HOUSE_PROPERTY_RIGHT', false, array('id'=>'property_right')))}
-	<br/>
+	<div class="form-group">
+		<label for="contact">联系人<span class="require">*</span></label>
+		<input type="text" id="contact" name="contact" value="{$data.contact|default=''}"/>
+	</div>
 
-	<label for="property_type">产权类型</label>
-	{:W('Lookup/showSelect', array('property_type', $data.property_type, 'HOUSE_PROPERTY_TYPE', false, array('id'=>'property_type')))}
-	<br/>
+	<div class="form-group">
+		<label for="contact_tel">联系电话<span class="require">*</span></label>
+		<input type="text" id="contact_tel" name="contact_tel" value="{$data.contact_tel|default=''}"/>
+	</div>
 
-	<label for="build_year">建筑年代</label>
-	<input type="text" name="build_year" value="{$data.build_year}" />
-	<br/>
+	<div id="debug"></div>
 
-	<input type="submit" value="发布"/>
+	<button type="submit" class="login_btn" style="border:none;cursor:pointer">发 布</button>
 </form>
 </block>

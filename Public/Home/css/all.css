@@ -207,10 +207,10 @@ input
 select
 {
 	margin: 0px;
-	border-top-width: 0px;
-	border-right-width: 0px;
-	border-bottom-width: 0px;
-	border-left-width: 0px;
+	--border-top-width: 0px;
+	--border-right-width: 0px;
+	--border-bottom-width: 0px;
+	--border-left-width: 0px;
 	vertical-align:middle;
 	padding-top: 0px;
 	padding-right: 0px;

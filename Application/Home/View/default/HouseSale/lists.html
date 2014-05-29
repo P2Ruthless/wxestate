@@ -1,0 +1,105 @@
+<extend name="Public/base"/>
+
+<block name="style">
+<style type="text/css">
+.mapbreak{
+	margin-bottom: 5px;
+}
+div.left_hotlp{
+	border: 1px solid #E7E7E7;
+}
+ul.filter-row{
+	padding-left: 52px;
+}
+.filter-group{
+	clear: both;
+}
+.filter-group .filter-label{
+	float: left;
+	height: 30px;
+	line-height: 30px;
+	padding-left: 10px;
+	padding-right: 5px;
+	background-color: #F9EFF8;
+}
+.filter-row li{
+	display: inline;
+	line-height: 30px;
+	padding: 0 .4em;
+}
+.filter-row li a{
+	text-decoration: none;
+}
+.filter-row li a:link{
+	color: #0033CC;
+}
+.filter-row li a:active{
+	color: #0033CC;
+}
+.filter-row li a:visited{
+	color: #0033CC;
+}
+.filter-row li.active a{
+	color: #FF8100;
+}
+.filter-group{
+	border-bottom: 1px dotted #9999CC;
+}
+.filter-group.last{
+	border-bottom: none;
+}
+</style>
+</block>
+
+<block name="content">
+	<div class="mapbreak"><span>房屋买卖&nbsp;&gt;&nbsp;</span> <a href="#" class="fwmm_sel">{$area}</a>共找到{$area|default=$city.name}租房<em>{$totalCount}</em>套在租房源 </div>
+	<div class="left_hotlp">
+		<div class="filter-group">
+			<div class="filter-label">区域：</div>
+			{:W('District/showFilter', array("__ROOT__/home/hs/[area]/$price/$square/$room/$pn", $city, $area))}
+		</div>
+		<div class="filter-group">
+			<div class="filter-label">价格：</div>
+			{:W('Lookup/showFilter', array("__ROOT__/home/hs/$area/[price]/$square/$room/$pn", '[price]', 'HOUSE_SALE_PRICE_RANGE', $price))}
+		</div>
+		<div class="filter-group">
+			<div class="filter-label">面积：</div>
+			{:W('Lookup/showFilter', array("__ROOT__/home/hs/$area/$price/[square]/$room/$pn", '[square]', 'HOUSE_SALE_SQUARE_RANGE', $square))}
+		</div>
+		<div class="filter-group last">
+			<div class="filter-label">户型：</div>
+			{:W('Lookup/showFilter', array("__ROOT__/home/hs/$area/$price/$square/[room]/$pn", '[room]', 'HOUSE_RENT_BEDROOM', $room))}
+		</div>
+	</div>
+	<div class="right_hotlp">
+		<div class="guanzhu">
+
+		</div>
+	</div>
+    
+	<div class="clear"></div>
+    
+	<!--搜索结果-->
+	<ul class="ssjg">
+		<volist name="dataList" id="data">
+		<li>
+			<a href="__ROOT__/home/hs/detail/{$data.id}"><img src="{$data.thumbnail}"/>
+			<div class="ssjg_tt">{$data.title}</div>
+			<div class="ssjg_xq">
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td align="left">{$data.community}</td>
+						<td align="left">{$data.bed_room}室{$data.live_room}厅</td>
+						<td align="left">{$data.square}平米</td>
+						<td align="left"><span>{$data.price}万</span></td>
+					</tr>
+				</table>
+			</div>
+			<div class="ssjg_text">
+				{$data.floor}层/{$data.floor_max}层,{$data.face|get_lookup_value='HOUSE_FACE_TYPE',###},{$data.decorate|get_lookup_value='HOUSE_DECORATE_TYPE',###}<br />{$data.busi_area_name},{$data.build_year}年建,{$data.structure|get_lookup_value='HOUSE_STRUCTURE_TYPE',###}<br />05-25发布<span class="a">随时看房</span><span class="b">随时看房</span><span class="c">随时看房</span><span class="d">随时看房</span><span class="e">随时看房</span>
+        	</div>
+			</a>
+    	</li>
+    	</volist>
+    </ul>
+</block>

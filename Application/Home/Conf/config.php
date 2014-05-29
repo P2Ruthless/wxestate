@@ -29,7 +29,9 @@ return array(
         'om/:area/:bdType/:contactType/:sdType/:pn'=>'OfficeMarket/lists',
         'om/detail/:id' => 'Article/detail',
         'om'=>'OfficeMarket/lists',
-        'hr/:area/:price/:room/:rentType/:contactType/:pn'=>'HouseRent/lists'
+        'hr/:area/:price/:room/:rentType/:contactType/:pn'=>'HouseRent/lists',
+        'hs/:area/:price/:square/:room/:pn'=>'HouseSale/lists',
+        'hs/detail/:id' => 'Article/detail'
     ),
 
     /* 默认城市 517大连 */

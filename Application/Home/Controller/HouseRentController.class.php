@@ -110,14 +110,14 @@ class HouseRentController extends HouseController{
 			'id'=>array('IN', $picIds),
 			'uid'=>array('EQ', is_login())
 			))
-			->setField('pid', $res['id']);
+			->setField('pid', $houseId);
 		$thumbPic = $picModel->find($picIds[0]);
 		if(empty($thumbPic)){
 			return;
 		}
 		$thumbInfo = getThumbImage($thumbPic['path'], 100, 100, true);
 		if($thumbInfo){
-			D('OfficeMarket', 'Logic')->where('id=%d', $res['id'])->setField('thumb', '/'.$thumbInfo['src']);
+			D('OfficeMarket', 'Logic')->where('id=%d', $houseId)->setField('thumb', '/'.$thumbInfo['src']);
 		}
 	}
 

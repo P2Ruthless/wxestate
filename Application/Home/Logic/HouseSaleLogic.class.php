@@ -2,6 +2,9 @@
 namespace Home\Logic;
 
 class HouseSaleLogic extends BaseLogic{
+
+	public $tableName = 'housesale';
+
 	protected $_validate = array(
 		array('contact', 'require', '请填写联系人姓名', self::MUST_VALIDATE),
 		array('contact_type', '1,2', '请选择联系人身份', self::MUST_VALIDATE, 'in'),
@@ -44,5 +47,47 @@ class HouseSaleLogic extends BaseLogic{
 		}
 
 		return true;
+	}
+
+	public function update($id = 0){
+		/* 获取文章数据 */
+		$data = $this->create();
+		if($data === false){
+			return false;
+		}
+
+		/* 添加或更新数据 */
+		if(empty($data['id'])){//新增数据
+			$data['id'] = $id;
+			$id = $this->add($data);
+			if(!$id){
+				$this->error = '新增房屋买卖信息失败！';
+				return false;
+			}
+		} else { //更新数据
+			$status = $this->save($data);
+			if(false === $status){
+				$this->error = '更新房屋买卖信息失败！';
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public function detail($id){
+		$data = parent::detail($id);
+		if($data == false){
+			return false;
+		}
+
+		//发布人
+		$data['user_nickname'] = get_nickname($data['uid']);
+		//图片
+		$PicModel = M('Picture');
+		$housePicList = $PicModel->field('path')->where(array('pid'=>$id))->select();
+		$data['picList'] = $housePicList;
+
+		return $data;
 	}
 }
