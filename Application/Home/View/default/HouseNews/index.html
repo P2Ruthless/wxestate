@@ -1,0 +1,98 @@
+<extend name="Public/base"/>
+
+<block name="content">
+<!--content start-->
+<div class="content_box">
+<!--left start-->
+	<div class="news_left">
+    	<div class="new_left_lit">
+        	<div class="img5"></div>
+            <table width="350" border="0" cellspacing="0" cellpadding="0" class="news_tt">
+              <tr>
+                <td width="67" class="news_tt_left">专题推荐</td>
+                <td width="283" align="right" class="news_tt_right"><a href="{:U('Home/houseNews/lists', array('category_id'=>$cates['recommend']))}">更多&gt;&gt;</a></td>
+              </tr>
+            </table>
+      			<a href="{:U('Home/houseNews/detail', array('document_id'=>$recommend_topline['id'],'category_title'=>'专题推荐'))}" class="news_blue_link">{$recommend_topline.title}</a>
+      			<volist name="recommend_news" id="recommend">
+      				<a href="{:U('Home/houseNews/detail', array('document_id'=>$recommend['id'],'category_title'=>'专题推荐'))}" 
+                class="news_link_a"><span>{$recommend.description}</span> | {$recommend.title}</a>	
+      			</volist>
+                        
+            <table width="350" border="0" cellspacing="0" cellpadding="0" class="news_tt">
+              <tr>
+                <td width="67" class="news_tt_left">买房小道</td>
+                <td width="283" align="right" class="news_tt_right"><a href="{:U('Home/houseNews/lists', array('category_id'=>$cates['buyway']))}">更多&gt;&gt;</a></td>
+              </tr>
+            </table>
+            <a href="{:U('Home/houseNews/detail', array('document_id'=>$buyway_topline['id'],'category_title'=>'买房小道'))}" class="news_blue_link">{$buyway_topline.title}</a>
+            <volist name="buyway_news" id="buyway">
+              <a href="{:U('Home/houseNews/detail', array('document_id'=>$buyway['id'],'category_title'=>'买房小道'))}" class="news_link_a"><span>{$buyway.description}</span> | {$buyway.title}</a>  
+            </volist>
+        
+        </div>
+        <div class="new_left_lit">
+            <table width="350" border="0" cellspacing="0" cellpadding="0" class="news_tt">
+              <tr>
+                <td width="67" class="news_tt_left">今日要闻</td>
+                <td width="283" align="right" class="news_tt_right"><a href="{:U('Home/houseNews/lists', array('category_id'=>$cates['newstoday']))}">更多&gt;&gt;</a></td>
+              </tr>
+            </table>
+			      <a href="{:U('Home/houseNews/detail', array('document_id'=>$newstoday_topline['id'],'category_title'=>'今日要闻'))}" class="news_blue_link">{$newstoday_topline.title}</a>
+            <volist name="newstoday_news" id="newstoday">
+              <a href="{:U('Home/houseNews/detail', array('document_id'=>$newstoday['id'],'category_title'=>'今日要闻'))}" class="news_link_a"><span>{$newstoday.description}</span> | {$newstoday.title}</a>  
+            </volist>
+          <table width="350" border="0" cellspacing="0" cellpadding="0" class="news_tt">
+              <tr>
+                <td width="67" class="news_tt_left">访谈活动</td>
+                <td width="283" align="right" class="news_tt_right"><a href="{:U('Home/houseNews/lists', array('category_id'=>$cates['interview']))}">更多&gt;&gt;</a></td>
+              </tr>
+          </table>
+          <a href="{:U('Home/houseNews/detail', array('document_id'=>$interview_topline['id'],'category_title'=>'访谈活动'))}" class="news_blue_link">{$interview_topline.title}</a>
+          <volist name="interview_news" id="interview">
+            <a href="{:U('Home/houseNews/detail', array('document_id'=>$interview['id'],'category_title'=>'访谈活动'))}" class="news_link_a"><span>{$interview.description}</span> | {$interview.title}</a>  
+          </volist>
+        </div>
+    
+    </div>
+<!--left end-->
+  
+  <!--right start-->
+  
+  	
+    
+  <div class="news_right">
+    <div class="index_guanzhu"></div>
+    <div class="clear"></div>
+	<table width="246" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td height="60"> <a href="#"><img src="images/maifang3.gif" width="245" height="52" /></a>
+        </td>
+          </tr>
+          <tr>
+            <td height="60"> <a href="#"><img src="images/maifang4.gif" width="245" height="52" /></a></td>
+          </tr>
+        </table>
+
+    <table width="240" border="0" cellspacing="0" cellpadding="0" class="news_tt">
+      <tr>
+        <td width="82" class="news_tt_left">代理楼盘</td>
+        <td width="158" align="right" class="news_tt_right"><a href="#">更多&gt;&gt;</a></td>
+      </tr>
+    </table>
+    <ul class="hotlp_box">
+   	    <li><div class="hotlp_box_line">
+            <a href="#"><img  /></a>
+            <a href="#" class="hotlp_lpname">城市印象在售</a><span>在售</span>
+            <div class="clear"></div>
+            均价：14000元/平米<br />
+            电话：400-606-6969 转 27829<br />
+            地址：甘井子区迎客路中段(机场附近)<br />
+            <a href="#">实景6张</a>&nbsp;&nbsp;<a href="#"> 户型4张</a>
+           <a href="#"></a></div>
+            </li></ul>
+  </div>
+    <!--right end-->
+
+<div class="clear"></div>
+</block>
