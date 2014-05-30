@@ -11,6 +11,7 @@ class DistrictModel extends Model{
 	const TYPE_PAREA = 21; //市辖区
 	const TYPE_PAREA2 = 22; //县
 	const TYPE_AREA = 3;
+	const TYPE_BUSI_AREA = 4; //商区
 
 	public static function getChild($pid){
 		$model = D('District')->field('id,pid,name,type');

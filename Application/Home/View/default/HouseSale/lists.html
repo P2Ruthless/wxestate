@@ -3,7 +3,7 @@
 <block name="style">
 <style type="text/css">
 .mapbreak{
-	margin-bottom: 5px;
+	margin-bottom: 10px;
 }
 div.left_hotlp{
 	border: 1px solid #E7E7E7;
@@ -11,15 +11,24 @@ div.left_hotlp{
 ul.filter-row{
 	padding-left: 52px;
 }
-.filter-group{
+ul.busi-area{
+	border: 1px solid #FF8100;
+	margin-left: 52px;
+	padding-left: 0 !important;
+	margin-bottom: 10px;
+	margin-right: 10px;
+}
+.filter-group, .sort-group{
 	clear: both;
 }
-.filter-group .filter-label{
+.filter-label{
 	float: left;
 	height: 30px;
 	line-height: 30px;
 	padding-left: 10px;
 	padding-right: 5px;
+}
+.filter-group .filter-label{
 	background-color: #F9EFF8;
 }
 .filter-row li{
@@ -48,11 +57,30 @@ ul.filter-row{
 .filter-group.last{
 	border-bottom: none;
 }
+.sort-group{
+	background-color: #F6F6F6;
+	border-top: 1px solid #E7E7E7;
+}
+.sort-group a{
+	color: black;
+	height: 30px;
+	line-height: 30px;
+	border: 1px solid #D9D9D9;
+	padding: 2px 2.5em 2px 1em;
+	margin: 0 5px;
+	text-decoration: none;
+}
+.sort-group a:visited{
+	color: black;
+}
+.sort-group a.active{
+	border: 1px solid #BBD1E8;
+}
 </style>
 </block>
 
 <block name="content">
-	<div class="mapbreak"><span>房屋买卖&nbsp;&gt;&nbsp;</span> <a href="#" class="fwmm_sel">{$area}</a>共找到{$area|default=$city.name}租房<em>{$totalCount}</em>套在租房源 </div>
+	<div class="mapbreak"><span>房屋买卖（{$totalCount}）&nbsp;&gt;&nbsp;</span></div>
 	<div class="left_hotlp">
 		<div class="filter-group">
 			<div class="filter-label">区域：</div>
@@ -69,6 +97,10 @@ ul.filter-row{
 		<div class="filter-group last">
 			<div class="filter-label">户型：</div>
 			{:W('Lookup/showFilter', array("__ROOT__/home/hs/$area/$price/$square/[room]/$pn", '[room]', 'HOUSE_RENT_BEDROOM', $room))}
+		</div>
+		<div class="sort-group">
+			<div class="filter-label">排序：</div>
+			{:W('Sort/showSort', array(array('hs.square'=>'面积','hs.price'=>'价格','doc.create_time'=>'时间'), "__ROOT__/home/hs/$area/$price/$square/$room/1"))}
 		</div>
 	</div>
 	<div class="right_hotlp">
@@ -96,7 +128,7 @@ ul.filter-row{
 				</table>
 			</div>
 			<div class="ssjg_text">
-				{$data.floor}层/{$data.floor_max}层,{$data.face|get_lookup_value='HOUSE_FACE_TYPE',###},{$data.decorate|get_lookup_value='HOUSE_DECORATE_TYPE',###}<br />{$data.busi_area_name},{$data.build_year}年建,{$data.structure|get_lookup_value='HOUSE_STRUCTURE_TYPE',###}<br />05-25发布<span class="a">随时看房</span><span class="b">随时看房</span><span class="c">随时看房</span><span class="d">随时看房</span><span class="e">随时看房</span>
+				{$data.floor}层/{$data.floor_max}层,{$data.face|get_lookup_value='HOUSE_FACE_TYPE',###},{$data.decorate|get_lookup_value='HOUSE_DECORATE_TYPE',###}<br />{$data.busi_area_name},{$data.build_year}年建,{$data.structure|get_lookup_value='HOUSE_STRUCTURE_TYPE',###}<br />{$data.create_time|friendlyDate=###,'mohu'}发布<span class="a">随时看房</span><span class="b">随时看房</span><span class="c">随时看房</span><span class="d">随时看房</span><span class="e">随时看房</span>
         	</div>
 			</a>
     	</li>

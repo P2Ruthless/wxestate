@@ -1,29 +1,69 @@
 <?php
 namespace Home\Widget;
+
 use Think\Controller;
 use Home\Model\DistrictModel;
 
 class DistrictWidget extends Controller{
-	public function showFilter($url, $city, $curArea = 0){
-		if($curArea === 0){
-			$curArea = I('area', 0);
+	public function showFilter($url, $city, $curArea = '0'){
+		if($curArea == '0'){
+			$curArea = I('area', '0');
 		}
+
+		$html = '<ul class="filter-row">';
 
 		$areaList = DistrictModel::getAreaOfCity($city['id']);
-		
+
 		array_unshift($areaList, array('name'=>'全部','id'=>'0'));
 
-		for($i = 0, $size = count($areaList); $i < $size; $i++){
-			$area = &$areaList[$i];
-			$area['url'] = str_replace('[area]', $area['id'], $url);
-			if($curArea == $area['id']){
-				$area['active'] = true;
+		if($curArea != '0'){
+			$District = D('District');
+			$currentArea = $District->find((int)$curArea);
+
+			$map = array('inactive'=>'N');
+			if($currentArea['type'] == DistrictModel::TYPE_AREA){
+				$map['pid'] = $currentArea['id'];
+			}else if($currentArea['type'] == DistrictModel::TYPE_BUSI_AREA){
+				$map['pid'] = $currentArea['pid'];
 			}
+
+			$busiAreaList = $District->field(true)->where($map)->select();
+
+			array_unshift($busiAreaList, array('name'=>'全部','id'=>$map['pid']));
 		}
 
-		$this->assign('areaList', $areaList);
+		foreach($areaList as $area){
+			$html .= '<li';
+			if($curArea == $area['id']){
+				$html .= ' class="active"';
+			}elseif(isset($currentArea)){
+				if($currentArea['id'] == $area['id'] || $currentArea['pid'] == $area['id']){
+					$html .= ' class="active"';
+				}
+			}
+			$html .= '>';
+			$href = str_replace('[area]', $area['id'], $url);
+			$html .= "<a href=\"{$href}\">{$area['name']}</a>";
+			$html .= '</li>';
+		}
+		$html .= '</ul>';
 
-		$this->display('Widget:districtFilter');
+		if(isset($busiAreaList) && !empty($busiAreaList)){
+			$html .= '<ul class="filter-row busi-area">';
+			foreach($busiAreaList as $busiArea){
+				$html .= '<li';
+				if($busiArea['id'] == $curArea){
+					$html .= ' class="active"';
+				}
+				$html .= '>';
+				$href = str_replace('[area]', $busiArea['id'], $url);
+				$html .= "<a href=\"{$href}\">{$busiArea['name']}</a>";
+				$html .= '</li>';
+			}
+			$html .= '</ul>';
+		}
+
+		return $html;
 	}
 
 	public function showSelect($city){

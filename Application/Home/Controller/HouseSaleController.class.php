@@ -3,7 +3,7 @@ namespace Home\Controller;
 
 class HouseSaleController extends HouseController{
 
-	public function lists($area=0, $price=0, $square = 0, $room = 0, $pn=1){
+	public function lists($area = '0', $price = '0', $square = '0', $room = '0', $pn = '1', $sort = ''){
 		$category = $this->category();
 		$city = get_current_city();
 
@@ -11,19 +11,43 @@ class HouseSaleController extends HouseController{
 
 		$map['hs.city'] = (int)$city['id'];
 
-		if($area != 0){
-			$map['hs.area'] = (int)$area;
+		if($area != '0'){
+			$map['_string'] = "hs.area=$area OR hs.busi_area=$area";
 		}
 		if($price != '0'){
 			$priceRange = explode('-', $price);
-			$map['hs.price'] = array('BETWEEN', array_map(function($v){return (int)$v;}, $priceRange));
+			if(is_numeric($priceRange[0]) && is_numeric($priceRange[1])){
+				$map['hs.price'] = array('BETWEEN', array_map(function($v){return (int)$v;}, $priceRange));
+			}elseif(is_numeric($priceRange[0])){
+				$map['hs.price'] = array('GT', (int)$priceRange[0]);
+			}elseif(is_numeric($priceRange[1])){
+				$map['hs.price'] = array('LT', (int)$priceRange[1]);
+			}
 		}
 		if($square != '0'){
 			$squareRange = explode('-', $square);
-			$map['hs.square'] = array('BETWEEN', array_map(function($v){return (int)$v;}, $squareRange));
+			if(is_numeric($squareRange[0]) && is_numeric($squareRange[1])){
+				$map['hs.square'] = array('BETWEEN', array_map(function($v){return (int)$v;}, $squareRange));
+			}elseif(is_numeric($squareRange[0])){
+				$map['hs.square'] = array('GT', (int)$squareRange[0]);
+			}elseif(is_numeric($squareRange[1])){
+				$map['hs.square'] = array('LT', (int)$squareRange[1]);
+			}
 		}
 		if($room != 0){
 			$map['hs.bed_room'] = (int)$room;
+		}
+
+		$sortField = 'hs.id';
+		$sortDir = 'desc';
+		if(!empty($sort)){
+			$sortInfo = explode('-', $sort);
+			if(isset($sortInfo[0])){
+				$sortField = $sortInfo[0];
+			}
+			if(isset($sortInfo[1])){
+				$sortDir = $sortInfo[1];
+			}
 		}
 
 		$model = D('HouseSale', 'Logic');
@@ -32,12 +56,12 @@ class HouseSaleController extends HouseController{
 			->join('to_document doc on hs.id=doc.id')
 			->where($map)
 			->count(1);
-		$dataList = $model->field('hs.id, doc.title, hs.community,hs.bed_room,hs.live_room,hs.floor,hs.floor_max,hs.decorate,hs.structure,hs.build_year,hs.face,hs.thumbnail, hs.price, hs.square, hs.busi_area, busi_area.name busi_area_name')
+		$dataList = $model->field('hs.id, doc.title,doc.create_time, hs.community,hs.bed_room,hs.live_room,hs.floor,hs.floor_max,hs.decorate,hs.structure,hs.build_year,hs.face,hs.thumbnail, hs.price, hs.square, hs.busi_area, busi_area.name busi_area_name')
 			->alias('hs')
 			->join('to_document doc on doc.id=hs.id')
 			->join('to_district busi_area on hs.busi_area=busi_area.id', 'LEFT')
 			->where($map)
-			->order('id desc')
+			->order("$sortField $sortDir")
 			->page($pn, $category['list_row'])
 			->select();
 
