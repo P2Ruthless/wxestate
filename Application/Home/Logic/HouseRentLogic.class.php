@@ -64,7 +64,7 @@ class HouseRentLogic extends BaseLogic{
 				'doc.position & 4 = 4',
 				'hr.city'=> is_array($city) ? $city['id'] : $city
 			))
-			->order('id desc')
+			->order('hr.id desc')
 			->limit($count)
 			->select();
 	}

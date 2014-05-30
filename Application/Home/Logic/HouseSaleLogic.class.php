@@ -90,4 +90,26 @@ class HouseSaleLogic extends BaseLogic{
 
 		return $data;
 	}
+
+	/**
+	 * 获取首页的
+	 */
+	public function listsForIndex($city, $count = 4){
+		return $this->field('hs.id,hs.thumbnail,hs.bed_room,hs.live_room,hs.price,hs.square,area.name area_name,busi_area.name busi_area_name')
+			->alias('hs')
+			->join('to_document doc on hs.id=doc.id')
+			->join('to_district area on hs.area=area.id', 'LEFT')
+			->join('to_district busi_area on hs.busi_area=busi_area.id', 'LEFT')
+			->where(array(
+				'doc.status'=>1,
+				'doc.category_id'=>10002,
+				'doc.create_time'=>array('lt', NOW_TIME),
+				'deadline=0 OR deadline>'.NOW_TIME,
+				'doc.position & 4 = 4',
+				'hs.city'=> is_array($city) ? $city['id'] : $city
+			))
+			->order('hs.id desc')
+			->limit($count)
+			->select();
+	}
 }

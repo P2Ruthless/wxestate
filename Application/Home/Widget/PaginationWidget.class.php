@@ -4,9 +4,15 @@ namespace Home\Widget;
 use Think\Controller;
 
 class PaginationWidget extends Controller{
-	public function showPagination($url, $pn=1, $totalCount=-1, $scope=20, $maxShow=10){
+	public function showPagination($url, $pn=1, $totalCount=-1, $scope=20, $maxShow=10, $appendQueryString = true){
 		if($totalCount == 0){
 			return '';
+		}
+		if($appendQueryString){
+			$queryString = $_SERVER['QUERY_STRING'];
+			if(!empty($queryString)){
+				$url .= (strpos($url, '?') === false ? '?' : '&') . $queryString;
+			}
 		}
 		$html = '<ul class="';
 		if($totalCount < 0){
@@ -19,8 +25,12 @@ class PaginationWidget extends Controller{
 			$html .='pagination">';
 			$pageCount = $totalCount % $scope == 0 ? ($totalCount / $scope) : ($totalCount / $scope + 1);
 			for($i = 1; $i <= $pageCount; $i++){
-				$href = str_replace('[pn]', $pn, $url);
-				$html .= "<li><a href='$href'>$i</a></li>";
+				$href = str_replace('[pn]', $i, $url);
+				$html .= '<li';
+				if($i == $pn){
+					$html .= ' class="active"';
+				}
+				$html .= "><a href=\"{$href}\">$i</a></li>";
 			}
 		}
 		$html .= '</ul>';

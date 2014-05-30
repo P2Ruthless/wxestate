@@ -2,14 +2,16 @@
 
 <block name="content">
 <br />
-	<img  width="1000" height="110" />
+	<img src="__IMG__/banner_ad.jpg" width="1000" height="110" />
 	<br />
 	<div class="index_left_tt">房屋买卖<span>最新二手房源</span></div>
-	<a href="#" class="index_rslist">
-		<img  />
-		<span>甘井子 泡崖康居园</span><em>95万</em>
-		<div class="pingshu">4室2厅 | 142M2</div>    
+	<volist name="houseSaleList" id="houseSale">
+	<a href="__ROOT__/home/hs/detail/{$houseSale.id}" target="_blank" class="index_rslist">
+		<img src="{$houseSale.thumbnail}" />
+		<span>{$houseSale.area_name} {$houseSale.busi_area_name}</span><em>{$houseSale.price}万</em>
+		<div class="pingshu">{$houseSale.bed_room}室{$houseSale.live_room}厅 | {$houseSale.square}平米</div>    
 	</a>
+	</volist>
 	<div class="clear"></div>
 	<div class="contenmid_dox">
 		<div class="fangwuzulin">
@@ -30,7 +32,7 @@
 	<div class="contenmid_dox">
 		<table width="100%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
-				<td width="69%"><img alt="" width="685" height="87" /></td>
+				<td width="69%"><img src="__IMG__/banner_ad2.jpg" alt="" width="685" height="87" /></td>
 				<td width="16%"><a href="{:U('HouseSale/add')}"><img src="__IMG__/maifang1.gif" width="150" height="87" /></a></td>
 				<td width="15%"><img src="__IMG__/maifang2.gif" width="150" height="87" /></td>
 			</tr>
