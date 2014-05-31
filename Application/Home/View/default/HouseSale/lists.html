@@ -143,7 +143,8 @@ ul.pagination li a{
 				</table>
 			</div>
 			<div class="ssjg_text">
-				{$data.floor}层/{$data.floor_max}层,{$data.face|get_lookup_value='HOUSE_FACE_TYPE',###},{$data.decorate|get_lookup_value='HOUSE_DECORATE_TYPE',###}<br />{$data.busi_area_name},{$data.build_year}年建,{$data.structure|get_lookup_value='HOUSE_STRUCTURE_TYPE',###}<br />{$data.create_time|friendlyDate=###,'mohu'}发布<span class="a">随时看房</span><span class="b">随时看房</span><span class="c">随时看房</span><span class="d">随时看房</span><span class="e">随时看房</span>
+				{$data.floor}层/{$data.floor_max}层,{$data.face|get_lookup_value='HOUSE_FACE_TYPE',###},{$data.decorate|get_lookup_value='HOUSE_DECORATE_TYPE',###}<br />{$data.busi_area_name},{$data.build_year}年建,{$data.structure|get_lookup_value='HOUSE_STRUCTURE_TYPE',###}<br />{$data.create_time|friendlyDate=###,'mohu'}发布
+				{:W('Tag/show', array($data['add_on']))}
         	</div>
 			</a>
     	</li>

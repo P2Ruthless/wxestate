@@ -56,7 +56,7 @@ class HouseSaleController extends HouseController{
 			->join('to_document doc on hs.id=doc.id')
 			->where($map)
 			->count(1);
-		$dataList = $model->field('hs.id, doc.title,doc.create_time, hs.community,hs.bed_room,hs.live_room,hs.floor,hs.floor_max,hs.decorate,hs.structure,hs.build_year,hs.face,hs.thumbnail, hs.price, hs.square, hs.busi_area, busi_area.name busi_area_name')
+		$dataList = $model->field('hs.id,doc.title,doc.create_time,hs.community,hs.bed_room,hs.live_room,hs.floor,hs.floor_max,hs.decorate,hs.structure,hs.build_year,hs.face,hs.thumbnail, hs.price, hs.add_on, hs.square, hs.busi_area, busi_area.name busi_area_name')
 			->alias('hs')
 			->join('to_document doc on doc.id=hs.id')
 			->join('to_district busi_area on hs.busi_area=busi_area.id', 'LEFT')
@@ -80,7 +80,7 @@ class HouseSaleController extends HouseController{
 
 	public function add(){
 		if(!is_login()){
-			cookie('__return_url__', U('HouseSale/add'));
+			set_redirect_url(U('HouseSale/add'));
 			$this->redirect('User/login');
 		}
 		$cate = $this->category();
@@ -101,6 +101,12 @@ class HouseSaleController extends HouseController{
 	}
 
 	public function update(){
+		if(isset($_POST['feature']) && is_array($_POST['feature'])){
+			$_POST['feature'] = array2string($_POST['feature']);
+		}
+		if(isset($_POST['add_on']) && is_array($_POST['add_on'])){
+			$_POST['add_on'] = array2string($_POST['add_on']);
+		}
 		if(!is_login()){
 			$this->error('请先登录');
 		}
