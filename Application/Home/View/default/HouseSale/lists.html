@@ -1,97 +1,7 @@
 <extend name="Public/base"/>
 
 <block name="style">
-<style type="text/css">
-.mapbreak{
-	margin-bottom: 10px;
-}
-div.left_hotlp{
-	border: 1px solid #E7E7E7;
-}
-ul.filter-row{
-	padding-left: 52px;
-}
-ul.busi-area{
-	border: 1px solid #FF8100;
-	margin-left: 52px;
-	padding-left: 0 !important;
-	margin-bottom: 10px;
-	margin-right: 10px;
-}
-.filter-group, .sort-group{
-	clear: both;
-}
-.filter-label{
-	float: left;
-	height: 30px;
-	line-height: 30px;
-	padding-left: 10px;
-	padding-right: 5px;
-}
-.filter-group .filter-label{
-	background-color: #F9EFF8;
-}
-.filter-row li{
-	display: inline;
-	line-height: 30px;
-	padding: 0 .4em;
-}
-.filter-row li a{
-	text-decoration: none;
-}
-.filter-row li a:link{
-	color: #0033CC;
-}
-.filter-row li a:active{
-	color: #0033CC;
-}
-.filter-row li a:visited{
-	color: #0033CC;
-}
-.filter-row li.active a{
-	color: #FF8100;
-}
-.filter-group{
-	border-bottom: 1px dotted #9999CC;
-}
-.filter-group.last{
-	border-bottom: none;
-}
-.sort-group{
-	background-color: #F6F6F6;
-	border-top: 1px solid #E7E7E7;
-}
-.sort-group a{
-	color: black;
-	height: 30px;
-	line-height: 30px;
-	border: 1px solid #D9D9D9;
-	padding: 2px 2.5em 2px 1em;
-	margin: 0 5px;
-	text-decoration: none;
-}
-.sort-group a:visited{
-	color: black;
-}
-.sort-group a.active{
-	border: 1px solid #BBD1E8;
-}
-ul.pagination li{
-	display: inline;
-}
-ul.pagination li.active a{
-	background-color: #9FBFE8;
-	color: white;
-	font-weight: bold;
-}
-ul.pagination li a{
-	text-decoration: none;
-	color: black;
-	padding: .2em .5em;
-	border: 1px solid #D9D9D9;
-	margin: 0 2px;
-}
-</style>
+<link rel="stylesheet" type="text/css" href="__CSS__/">
 </block>
 
 <block name="content">
@@ -144,7 +54,7 @@ ul.pagination li a{
 			</div>
 			<div class="ssjg_text">
 				{$data.floor}层/{$data.floor_max}层,{$data.face|get_lookup_value='HOUSE_FACE_TYPE',###},{$data.decorate|get_lookup_value='HOUSE_DECORATE_TYPE',###}<br />{$data.busi_area_name},{$data.build_year}年建,{$data.structure|get_lookup_value='HOUSE_STRUCTURE_TYPE',###}<br />{$data.create_time|friendlyDate=###,'mohu'}发布
-				{:W('Tag/show', array($data['add_on']))}
+				{:W('Tag/showTag', array($data['add_on']))}
         	</div>
 			</a>
     	</li>

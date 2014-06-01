@@ -109,7 +109,7 @@ class UserController extends HomeController
             }
 
         } else { //显示登录表单
-            $returnUrl = get_redirect_url()
+            $returnUrl = get_redirect_url();
             if (is_login()) {
                 redirect($returnUrl);
             }

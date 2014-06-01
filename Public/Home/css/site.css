@@ -641,7 +641,7 @@ ul.ssjg li img{
 	margin-left:7px;
 	padding-left:5px;
 	padding-right:5px;}
-.left_hotlp_tt span.fortab{
+span.fortab{
 	color: #FFF;
 	display: inline-block;
 	margin-left: 7px;
@@ -694,7 +694,7 @@ span.e{
 }
 .home_pic {
 	float: left;
-	height: 350px;
+	--height: 350px;
 	width: 350px;
 	margin-top: 10px;
 }
@@ -1031,4 +1031,94 @@ a.lit_pic_link:hover img {
 	color: #333;
 	text-decoration: none;
 	text-align: left;
+}
+/*added by wanghe */
+.mapbreak{
+	margin-bottom: 10px;
+}
+div.left_hotlp{
+	border: 1px solid #E7E7E7;
+}
+ul.filter-row{
+	padding-left: 52px;
+}
+ul.busi-area{
+	border: 1px solid #FF8100;
+	margin-left: 52px;
+	padding-left: 0 !important;
+	margin-bottom: 10px;
+	margin-right: 10px;
+}
+.filter-group, .sort-group{
+	clear: both;
+}
+.filter-label{
+	float: left;
+	height: 30px;
+	line-height: 30px;
+	padding-left: 10px;
+	padding-right: 5px;
+}
+.filter-group .filter-label{
+	background-color: #F9EFF8;
+}
+.filter-row li{
+	display: inline;
+	line-height: 30px;
+	padding: 0 .4em;
+}
+.filter-row li a{
+	text-decoration: none;
+}
+.filter-row li a:link{
+	color: #0033CC;
+}
+.filter-row li a:active{
+	color: #0033CC;
+}
+.filter-row li a:visited{
+	color: #0033CC;
+}
+.filter-row li.active a{
+	color: #FF8100;
+}
+.filter-group{
+	border-bottom: 1px dotted #9999CC;
+}
+.filter-group.last{
+	border-bottom: none;
+}
+.sort-group{
+	background-color: #F6F6F6;
+	border-top: 1px solid #E7E7E7;
+}
+.sort-group a{
+	color: black;
+	height: 30px;
+	line-height: 30px;
+	border: 1px solid #D9D9D9;
+	padding: 2px 2.5em 2px 1em;
+	margin: 0 5px;
+	text-decoration: none;
+}
+.sort-group a:visited{
+	color: black;
+}
+.sort-group a.active{
+	border: 1px solid #BBD1E8;
+}
+ul.pagination li{
+	display: inline;
+}
+ul.pagination li.active a{
+	background-color: #9FBFE8;
+	color: white;
+	font-weight: bold;
+}
+ul.pagination li a{
+	text-decoration: none;
+	color: black;
+	padding: .2em .5em;
+	border: 1px solid #D9D9D9;
+	margin: 0 2px;
 }

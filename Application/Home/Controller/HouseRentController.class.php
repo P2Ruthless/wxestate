@@ -14,44 +14,62 @@ class HouseRentController extends HouseController{
 	 * sdType 供求类型
 	 * pn 分页
 	 */
-	public function lists($area=0, $price=0, $room=0, $rentType=0, $contactType=0, $pn=1){
+	public function lists($area='0', $price='0', $room='0', $rentType='0', $pn='1', $sort = ''){
 		$category = $this->category();
 		$city = get_current_city();
 
 		$map = array();
 
-		$map['a.city'] = (int)$city['id'];
+		$map['hr.city'] = (int)$city['id'];
 
 		if($area != 0){
-			$map['a.area'] = (int)$area;
+			$map['_string'] = "hr.area=$area OR hr.busi_area=$area";
 		}
-		if($price != 0){
+		if($price != '0'){
 			$priceRange = explode('-', $price);
-			$map['a.price'] = array('BETWEEN', array_map(function($v){return (int)$v;}, $priceRange));
+			if(is_numeric($priceRange[0]) && is_numeric($priceRange[1])){
+				$map['hr.price'] = array('BETWEEN', array_map(function($v){return (int)$v;}, $priceRange));
+			}elseif(is_numeric($priceRange[0])){
+				$map['hr.price'] = array('GT', (int)$priceRange[0]);
+			}elseif(is_numeric($priceRange[1])){
+				$map['hr.price'] = array('LT', (int)$priceRange[1]);
+			}
 		}
-		if($room != 0){
-			$map['a.bed_room'] = (int)$room;
+		if($room != '0'){
+			$map['hr.bed_room'] = (int)$room;
 		}
-		if($rentType != 0){
-			$map['a.rent_type'] = (int)$rentType;
+		if($rentType != '0'){
+			$map['hr.rent_type'] = (int)$rentType;
 		}
-		if($contactType != 0){
-			$map['a.contact_type'] = (int)$contactType;
+
+		$sortField = 'hr.id';
+		$sortDir = 'desc';
+		if(!empty($sort)){
+			$sortInfo = explode('-', $sort);
+			if(isset($sortInfo[0])){
+				$sortField = $sortInfo[0];
+			}
+			if(isset($sortInfo[1])){
+				$sortDir = $sortInfo[1];
+			}
 		}
 
 		$model = D('HouseRent', 'Logic');
 
-		$totalCount = $model->alias('a')
-			->join('to_document b on a.id=b.id')
+		$totalCount = $model->alias('hr')
+			->join('to_document doc on hr.id=doc.id')
 			->where($map)
 			->count(1);
-		$dataList = $model->field('a.id, b.title, a.thumbnail, a.price, a.square, a.busi_area, c.name busi_area_name')->alias('a')
-			->join('to_document b on a.id=b.id')
-			->join('to_district c on a.busi_area=c.id', 'LEFT')
+		$dataList = $model->field('hr.id, doc.title, doc.create_time, hr.thumbnail, hr.price, hr.square, hr.bed_room, hr.live_room, hr.floor, hr.floor_max, hr.decorate, hr.busi_area, area.name area_name, busi_area.name busi_area_name')->alias('hr')
+			->join('to_document doc on hr.id=doc.id')
+			->join('to_district area on area.id=hr.area', 'LEFT')
+			->join('to_district busi_area on hr.busi_area=busi_area.id', 'LEFT')
 			->where($map)
+			->order("$sortField $sortDir")
 			->page($pn, $category['list_row'])
 			->select();
 
+		$this->assign('currentNav', 10001);
 		$this->assign('dataList', $dataList);
 		$this->assign('area', $area);
 		$this->assign('price', $price);
@@ -91,8 +109,12 @@ class HouseRentController extends HouseController{
 
 			$this->assign('info', $info);
 
-			$this->display();
+			$this->display('edit');
 		}
+	}
+
+	public function update(){
+
 	}
 
 	private function updatePictures($houseId, $pics){
@@ -117,7 +139,7 @@ class HouseRentController extends HouseController{
 		}
 		$thumbInfo = getThumbImage($thumbPic['path'], 100, 100, true);
 		if($thumbInfo){
-			D('OfficeMarket', 'Logic')->where('id=%d', $houseId)->setField('thumb', '/'.$thumbInfo['src']);
+			D('HouseRent', 'Logic')->where('id=%d', $houseId)->setField('thumbnail', '/'.$thumbInfo['src']);
 		}
 	}
 

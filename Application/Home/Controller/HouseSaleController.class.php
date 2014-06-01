@@ -34,7 +34,7 @@ class HouseSaleController extends HouseController{
 				$map['hs.square'] = array('LT', (int)$squareRange[1]);
 			}
 		}
-		if($room != 0){
+		if($room != '0'){
 			$map['hs.bed_room'] = (int)$room;
 		}
 

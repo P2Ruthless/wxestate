@@ -20,7 +20,7 @@ class TagWidget extends Controller{
 		return $html;
 	}
 
-	public function show($value){
+	public function showTag($value, $cssClass = ''){
 		if(empty($value)){
 			return '';
 		}
@@ -32,6 +32,9 @@ class TagWidget extends Controller{
 		$html = '';
 		for($i = 0, $count = count($tagList); $i < $count; $i++){
 			$html .= '<span class="';
+			if(!empty($cssClass)){
+				$html .= $cssClass . ' ';
+			}
 			$color = $colorClass[$i % count($colorClass)];
 			$html .= $color;
 			$html .= "\">{$tagList[$i]}</span>";

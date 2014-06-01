@@ -1,24 +1,114 @@
-<extend name="Base/common"/>
+<extend name="Public/base"/>
 
-<block name="header">
-    
+<block name="style">
+<link rel="stylesheet" type="text/css" href="__STATIC__/adgallery/jquery.ad-gallery.css">
+<style type="text/css">
+.mapbreak{
+	margin-bottom: 10px;
+}
+</style>
 </block>
 
-<block name="side"></block>
+<block name="headscript">
+<script type="text/javascript" src="__STATIC__/adgallery/jquery.ad-gallery.js"></script>
+<script type="text/javascript">
+$(function(){
+    $('.ad-gallery').adGallery();
+});
+</script>
+</block>
 
-<block name="body">
-	<div class="col-xs-9 main-content">
-		<?php use Common\Model\LookupModel;?>
-		<h2>[{:LookupModel::getValue('HOUSE_SUPPLY_DEMAND', $info['sd_type'])}]{$info.title}</h2>
-		<div>区域{$info.area}{$info.busi_area}</div>
-		<div>地段{$info.area_sector}</div>
-		<div>类别{:LookupModel::getValue('OFFICE_MARKET_BD_TYPE', $info['bd_type'])}</div>
-		<div>地段{$info.square}M<sup>2</sup></div>
-		<div>价格{$info.price}</div>
-		<volist id='housePic' name='info.picList'>
-			<img style='width: 200px;' src='{$housePic.path}'/>
-			<br/>
-		</volist>
-		<section id="contents">{$info.desc_txt}</section>
-	</div>
+<block name="content">
+	<div class="mapbreak"><span>房屋买卖&nbsp;&gt;&nbsp;</span> {$city.id}二手房> {$info.area}二手房 </div>
+	<div class="left_hotlp">
+		<div class="left_hotlp_tt">{$info.title} {:W('Tag/show', array($info['feature'], 'fortab'))}</div>
+		<div class="home_pic">
+            <div class="ad-gallery">
+    			<div class="ad-image-wrapper"></div>
+                <div class="ad-nav">
+                    <div class="ad-thumbs">
+                        <ul class="ad-thumb-list">
+                            <volist id='housePic' name='info.picList'>
+                            <li><a href="{$housePic.path}"><img style="height:60px;" src="{$housePic.path}"/></a></li>
+                            </volist>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+		</div>
+		<div class="fcxq">
+		售价：<span class="redtext">{$info.price}</span>万
+		<br />
+		单价：<em><php> echo round($info['price'] * 10000 / $info['square'], 2)</php>元/平米</em>&nbsp;&nbsp;&nbsp;&nbsp;首付：<em>{$info.down_payment}万</em>&nbsp;&nbsp;&nbsp;&nbsp;月供：<em>{$info.monthly}元</em>
+		<br />
+        房型：<em>{$info.bed_room}室{$info.live_room}厅</em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;建筑面积：<em>{$info.square}平米</em>
+        <br />
+        朝向：<em>{$info.face|get_lookup_value='HOUSE_FACE_TYPE', ###}</em>
+        <br />
+        楼层：<em>{$info.floor}层({$info.floor_max}层)</em>
+        <br />
+        <div class="tel_bp">{$info.contact_tel}</div>
+        年代：<em>{$info.build_year}年</em> &nbsp;&nbsp;&nbsp;&nbsp;结构：<em>{$info.structure|get_lookup_value='HOUSE_STRUCTURE_TYPE',###}</em>
+        <br /> 
+        装修：<em>{$info.decorate|get_lookup_value='HOUSE_DECORATE_TYPE',###}</em>&nbsp;&nbsp;&nbsp;&nbsp;  住宅类别：<em>{$info.build_type|get_lookup_value='HOUSE_BUILD_TYPE',###}</em><br />
+        产权性质：<em>{$info.property_type|get_lookup_value='HOUSE_PROPERTY_TYPE',###}</em><br/>
+    </div>
+    <div class="clear"></div>
+    <div class="index_left_tt">房源描述</div>
+    配套设施：{:W('Tag/show', array($info['add_on'], 'fortab'))}
+    <div>
+    {$info.desc_txt}
+    </div>
+    <volist id='housePic' name='info.picList'>
+    <img src="{$housePic.path}" style="max-width:640px"/>
+    </volist>
+     <div class="index_left_tt">地理位置</div>
+    //TODO:地图
+    <div class="left_hotlp_tt">附近推荐</div>
+      <ul class="hotlp_box">
+   	    <li><div class="hotlp_box_line">
+            <a href="#"><img  /></a>
+            <a href="#" class="hotlp_lpname">城市印象在售</a>
+            <div class="clear"></div>
+            均价：14000元/平米<br />
+            电话：400-606-6969 转 27829<br />
+            地址：甘井子区迎客路中段(机场附近)<br />
+   	    </div>
+            </li>
+            
+             <li><div class="hotlp_box_line">
+            <a href="#"><img  /></a>
+            <a href="#" class="hotlp_lpname">城市印象在售</a>
+            <div class="clear"></div>
+            均价：14000元/平米<br />
+            电话：400-606-6969 转 27829<br />
+            地址：甘井子区迎客路中段(机场附近)<br />
+             </div></li>
+             <li><div class="hotlp_box_line">
+            <a href="#"><img  /></a>
+            <a href="#" class="hotlp_lpname">城市印象在售</a>
+            <div class="clear"></div>
+            均价：14000元/平米<br />
+            电话：400-606-6969 转 27829<br />
+            地址：甘井子区迎客路中段(机场附近)<br />
+            <a href="#"></a></div> </li>
+          <div class="clear"></div>
+        </ul>
+    </div>
+    
+    <!--left end-->
+    <!--rigth start-->
+    <div class="right_hotlp">
+   
+    	<div class="guanzhu">
+        
+        </div>
+   	  <br /><BR />
+    
+    <img class="dianyuan" />
+    <div class="dianyuan_name">经纪人：{$info.contact}<br />{$info.contact_tel}</div>
+    </div>
+    <!--rigth end-->
+    
+    <div class="clear"></div>
 </block>

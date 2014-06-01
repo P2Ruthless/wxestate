@@ -1,6 +1,7 @@
 <extend name="Public/base"/>
 
 <block name="style">
+<link rel="stylesheet" type="text/css" href="__STATIC__/adgallery/jquery.ad-gallery.css">
 <style type="text/css">
 .mapbreak{
 	margin-bottom: 10px;
@@ -8,20 +9,32 @@
 </style>
 </block>
 
+<block name="headscript">
+<script type="text/javascript" src="__STATIC__/adgallery/jquery.ad-gallery.js"></script>
+<script type="text/javascript">
+$(function(){
+    $('.ad-gallery').adGallery();
+});
+</script>
+</block>
+
 <block name="content">
 	<div class="mapbreak"><span>房屋买卖&nbsp;&gt;&nbsp;</span> {$city.id}二手房> {$info.area}二手房 </div>
 	<div class="left_hotlp">
-		<div class="left_hotlp_tt">{$info.title} <span class="fortab a">随时看房</span></div>
+		<div class="left_hotlp_tt">{$info.title} {:W('Tag/showTag', array($info['feature'], 'fortab'))}</div>
 		<div class="home_pic">
-			<img class="main_pic" src="{$info.thumbnail}"/>
-			<br /> <br />
-			<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<volist id='housePic' name='info.picList'>
-					<td><a href="#" class="lit_pic_link"><img class="lit_pic" src="{$housePic.path}"/></a></td>
-					</volist>
-				</tr>
-			</table>
+            <div class="ad-gallery">
+    			<div class="ad-image-wrapper"></div>
+                <div class="ad-nav">
+                    <div class="ad-thumbs">
+                        <ul class="ad-thumb-list">
+                            <volist id='housePic' name='info.picList'>
+                            <li><a href="{$housePic.path}"><img style="height:60px;" src="{$housePic.path}"/></a></li>
+                            </volist>
+                        </ul>
+                    </div>
+                </div>
+            </div>
 		</div>
 		<div class="fcxq">
 		售价：<span class="redtext">{$info.price}</span>万
@@ -37,13 +50,18 @@
         <div class="tel_bp">{$info.contact_tel}</div>
         年代：<em>{$info.build_year}年</em> &nbsp;&nbsp;&nbsp;&nbsp;结构：<em>{$info.structure|get_lookup_value='HOUSE_STRUCTURE_TYPE',###}</em>
         <br /> 
-        装修：<em>{$info.decorate|get_lookup_value='HOUSE_DECORATE_TYPE',###}</em>   &nbsp;&nbsp;&nbsp;&nbsp;  住宅类别：<em>{$info.build_type|get_lookup_value='HOUSE_BUILD_TYPE',###}</em><br />  
-        产权性质：<em>{$info.property_type|get_lookup_value='HOUSE_PROPERTY_TYPE',###}</em>     &nbsp;&nbsp;&nbsp;&nbsp;看房时间：<em>随时看房</em><br />
-         楼盘名称：<a href="#">南山豪庭</a>
+        装修：<em>{$info.decorate|get_lookup_value='HOUSE_DECORATE_TYPE',###}</em>&nbsp;&nbsp;&nbsp;&nbsp;  住宅类别：<em>{$info.build_type|get_lookup_value='HOUSE_BUILD_TYPE',###}</em><br />
+        产权性质：<em>{$info.property_type|get_lookup_value='HOUSE_PROPERTY_TYPE',###}</em><br/>
     </div>
     <div class="clear"></div>
     <div class="index_left_tt">房源描述</div>
+    配套设施：{:W('Tag/showTag', array($info['add_on'], 'fortab'))}
+    <div>
     {$info.desc_txt}
+    </div>
+    <volist id='housePic' name='info.picList'>
+    <img src="{$housePic.path}" style="max-width:640px"/>
+    </volist>
      <div class="index_left_tt">地理位置</div>
     //TODO:地图
     <div class="left_hotlp_tt">附近推荐</div>

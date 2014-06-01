@@ -29,7 +29,8 @@ return array(
         'om/:area/:bdType/:contactType/:sdType/:pn'=>'OfficeMarket/lists',
         'om/detail/:id' => 'Article/detail',
         'om'=>'OfficeMarket/lists',
-        'hr/:area/:price/:room/:rentType/:contactType/:pn'=>'HouseRent/lists',
+        'hr/:area/:price/:room/:rentType/:pn'=>'HouseRent/lists',
+        'hr/:detail/:id' => 'HouseRent/detail',
         'hs/:area/:price/:square/:room/:pn'=>'HouseSale/lists',
         'hs/detail/:id' => 'Article/detail'
     ),
@@ -74,7 +75,7 @@ return array(
     'PICTURE_WARTER'=> array(
         'warterPic' => './Public/wartertest.png',
         'position'  => 1,
-        'alpha'     => 50
+        'alpha'     => 100
     ),
 
     /* 编辑器图片上传相关配置 */

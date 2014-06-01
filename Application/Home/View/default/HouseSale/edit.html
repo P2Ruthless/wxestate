@@ -72,12 +72,6 @@ $(function(){
 		$("button#login_submit").text('发 布').removeClass("log-in").attr("disabled", false);
 	});
 	$("form").submit(function () {
-		var username = $('#username').val();
-		var password = $('#password').val();
-		if(username == '' || password == ''){
-			op_error('请填写用户名和密码', '提示');
-			return false;
-		}
 		if(editor){
 			editor.sync();
 		}
@@ -232,8 +226,6 @@ $(function(){
 		<label for="contact_tel">联系电话<span class="require">*</span></label>
 		<input type="text" id="contact_tel" name="contact_tel" value="{$data.contact_tel|default=''}"/>
 	</div>
-
-	<div id="debug"></div>
 
 	<button type="submit" class="login_btn" style="border:none;cursor:pointer">发 布</button>
 </form>
