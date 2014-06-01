@@ -16,6 +16,7 @@
       	<volist name="lists" id="document">
       		<a href="{:U('Home/houseNews/detail', array('document_id'=>$document['id'],'category_title'=>$cate['title']))}" class="news_link_a"><span>{$document.description}</span> | {$document.title}</a>
       	</volist>
+        {$page}
 	</div>
 <!--left end-->
   

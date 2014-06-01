@@ -43,10 +43,16 @@ class HouseNewsController extends HomeController{
 		$Document = D('Document');
 		$Category = D('Category');
 		$cate = $Category->find($category_id);
-		$lists = $Document->where('category_id = '.$category_id)->order('create_time desc')->select();
-		
+		$count = $Document->where('category_id = '.$category_id)->count();
+		$Page = new \Think\Page($count,25);
+		$lists = $Document->where('category_id = '.$category_id)
+				 ->order('create_time desc')
+				 ->limit($Page->firstRow.','.$Page->listRows)
+				 ->select();
+		$show = $Page->show();		 
 		$this->assign('cate',$cate);
 		$this->assign('lists',$lists);
+		$this->assign('page',$show);
 		$this->display();
 	}
 
