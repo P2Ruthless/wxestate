@@ -73,4 +73,9 @@ class DistrictModel extends Model{
 		return D('District')->where(array('type'=>array('in', '2,12')))->select();
 
 	}
+
+	public static function cityList(){
+		
+		return D('District')->where(array('type'=>self::TYPE_CITY, 'inactive'=>'N'))->select();
+	}
 }

@@ -86,6 +86,28 @@ function arr2str($arr, $glue = ',')
 }
 
 /**
+ * 跟Common里的区别是 如果是空字符串则过滤掉
+ */
+function array2string($arr, $split = ','){
+    if(empty($arr)){
+        return '';
+    }else{
+        $feature = '';
+        $i = 0;
+        foreach ($arr as $value) {
+            if(empty($value)){
+                continue;
+            }
+            if($i++ > 0){
+                $feature .= $split;
+            }
+            $feature .= $value;
+        }
+        return $feature;
+    }
+}
+
+/**
  * 字符串截取，支持中文和其他编码
  * @static
  * @access public

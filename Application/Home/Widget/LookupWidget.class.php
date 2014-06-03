@@ -10,16 +10,22 @@ class LookupWidget extends Controller{
 		$lookList = LookupModel::getList($type);
 		array_unshift($lookList, array('val'=>'全部','name'=>'0'));
 
-		foreach($lookList as &$lookup){
+		$html = '<ul class="filter-row">';
+
+		foreach($lookList as $lookup){
+			$html .= '<li';
 			if($curName == $lookup['name']){
-				$lookup['active'] = true;
+				$html .= ' class="active"';
 			}
-			$lookup['url'] = str_replace($replace, $lookup['name'], $url);
+			$html .= '>';
+			$url = str_replace($replace, $lookup['name'], $url);
+			$html .= "<a href=\"{$url}\">{$lookup['val']}</a>";
+			$html .= '</li>';
 		}
 
-		$this->assign('lookList', $lookList);
+		$html .= '</ul>';
 
-		$this->display('Widget:lookupFilter');
+		return $html;
 	}
 
 	public function showTab($url, $replace, $type, $curName){
@@ -40,8 +46,8 @@ class LookupWidget extends Controller{
 	public function showSelect($name, $value, $type, $first=array('name'=>'0','val'=>"==请选择=="), $htmlOptions=array()){
 		$html = "<select name='$name'";
 
-		foreach($htmlOptions as $key=>$value){
-			$html .= " $key=\"$value\"";
+		foreach($htmlOptions as $k=>$v){
+			$html .= " $k=\"{$v}\"";
 		}
 
 		$html .= '>';

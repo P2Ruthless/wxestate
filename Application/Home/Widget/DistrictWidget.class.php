@@ -10,9 +10,13 @@ class DistrictWidget extends Controller{
 			$curArea = I('area', '0');
 		}
 
+		if(is_array($city)){
+			$city = $city['id'];
+		}
+
 		$html = '<ul class="filter-row">';
 
-		$areaList = DistrictModel::getAreaOfCity($city['id']);
+		$areaList = DistrictModel::getAreaOfCity($city);
 
 		array_unshift($areaList, array('name'=>'全部','id'=>'0'));
 
@@ -66,8 +70,32 @@ class DistrictWidget extends Controller{
 		return $html;
 	}
 
-	public function showSelect($city){
-		$areaList = DistrictModel::getChild($city['id']);
+	public function showCityFilter($url, $city){
+		if(is_array($city)){
+			$city = $city['id'];
+		}
+		$cityList = DistrictModel::cityList();
+		$html = '<ul class="filter-row">';
+		foreach($cityList as $ct){
+			$html .= '<li';
+			if($city == $ct['id']){
+				$html .= ' class="active"';
+			}
+			$html .= '>';
+			$href = str_replace('[city]', $ct['id'], $url);
+			$html .= "<a href=\"{$href}\">{$ct['name']}</a>";
+
+		}
+		$html .= '</ul>';
+
+		return $html;
+	}
+
+	public function showSelect($city, $curArea = '', $curBusiArea = ''){
+		if(is_array($city)){
+			$city = $city['id'];
+		}
+		$areaList = DistrictModel::getChild($city);
 		if(empty($areaList)){
 			return '';
 		}
@@ -75,7 +103,11 @@ class DistrictWidget extends Controller{
 		$html = '<select id="area" name="area"><option value="">区域</option>';
 		foreach($areaList as $area){
 			$areaIdList[] = $area['id'];
-			$html .= "<option value=\"{$area['id']}\">{$area['name']}</option>";
+			$html .= "<option value=\"{$area['id']}\"";
+			if($curArea == $area['id']){
+				$html .= ' selected';
+			}
+			$html .= ">{$area['name']}</option>";
 		}
 		$html .= '</select>';
 
@@ -83,7 +115,11 @@ class DistrictWidget extends Controller{
 		if(!empty($busiAreaList)){
 			$html .= '<select id="busi_area" name="busi_area"><option value="">商区</option>';
 			foreach($busiAreaList as $busiArea){
-				$html .= "<option value=\"{$busiArea['id']}\" class=\"{$busiArea['pid']}\">{$busiArea['name']}</option>";
+				$html .= "<option value=\"{$busiArea['id']}\" class=\"{$busiArea['pid']}\"";
+				if($curBusiArea == $busiArea['id']){
+					$html .= ' selected';
+				}
+				$html .= ">{$busiArea['name']}</option>";
 			}
 			$html .= '</select>';
 		}

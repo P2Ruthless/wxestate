@@ -22,7 +22,7 @@ class HouseRentController extends HouseController{
 
 		$map['hr.city'] = (int)$city['id'];
 
-		if($area != 0){
+		if($area != '0'){
 			$map['_string'] = "hr.area=$area OR hr.busi_area=$area";
 		}
 		if($price != '0'){

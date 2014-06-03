@@ -191,7 +191,7 @@ $(function(){
 	<div class="form-group">
 		<label>租金</label>
 		<input type="text" name="price" value="{:I('price')}"/>元/月
-		{:W('Lookup/showSelect', array('price', I('price'), 'HOUSE_RENT_DEPOSIT_TYPE', false))}
+		{:W('Lookup/showSelect', array('deposit_type', I('deposit_type'), 'HOUSE_RENT_DEPOSIT_TYPE', false))}
 	</div>
 
 	<div class="form-group">
@@ -202,7 +202,7 @@ $(function(){
 	<div class="form-group">
 		<label>房源描述</label>
 		<textarea id="desc_txt" name="desc_txt"></textarea>
-		{:hook('documentEditFormContent',array('id'=>'desc_txt','value'=>htmlspecialchars(I('desc_txt'))))}
+		{:hook('documentEditFormContent',array('id'=>'desc_txt', name=>'desc_txt', 'value'=>htmlspecialchars(I('desc_txt'))))}
 	</div>
 
 	<div id="house_pic_upload">
@@ -210,9 +210,10 @@ $(function(){
 		<input type="file" id="house_pic_file"/>
 		<input type="hidden" id="house_pic" name="house_pic" value='{:I("house_pic", "[]")}'/>
 		<div id="img_box"></div>
-		<div class="clearfix"></div>
 		<div id="queue_container"></div>
 	</div>
+
+	<div class="clear form-group"></div>
 	
 	<div class="form-group">
 		<label>联系人</label>

@@ -32,7 +32,9 @@ return array(
         'hr/:area/:price/:room/:rentType/:pn'=>'HouseRent/lists',
         'hr/:detail/:id' => 'HouseRent/detail',
         'hs/:area/:price/:square/:room/:pn'=>'HouseSale/lists',
-        'hs/detail/:id' => 'Article/detail'
+        'hs/detail/:id' => 'Article/detail',
+        'sr/:area/:type/:price' => 'ShortRent/lists',
+        'sr/detail/:id' => 'Article/detail'
     ),
 
     /* 默认城市 517大连 */

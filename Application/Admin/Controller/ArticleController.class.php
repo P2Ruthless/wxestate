@@ -72,7 +72,7 @@ class ArticleController extends AdminController {
         //获取动态分类
         $cate_auth  =   AuthGroupModel::getAuthCategories(UID);	//获取当前用户所有的内容权限节点
         $cate_auth  =   $cate_auth == null ? array() : $cate_auth;
-        $cate       =   M('Category')->where(array('status'=>1))->field('id,title,pid,allow_publish')->order('pid,sort')->select();
+        $cate       =   M('Category')->where(array('status'=>1))->field('id,name,title,pid,allow_publish')->order('pid,sort')->select();
 
         //没有权限的分类则不显示
         if(!IS_ROOT){
@@ -98,6 +98,7 @@ class ArticleController extends AdminController {
         //生成每个分类的url
         foreach ($cate as $key=>&$value){
             $value['url']   =   'Article/index?cate_id='.$value['id'];
+            
             if($cate_id == $value['id'] && $hide_cate){
                 $value['current'] = true;
             }else{
@@ -106,10 +107,24 @@ class ArticleController extends AdminController {
             if(!empty($value['_child'])){
                 $is_child = false;
                 foreach ($value['_child'] as $ka=>&$va){
-                    $va['url']      =   'Article/index?cate_id='.$va['id'];
+                    if($value['name'] == 'house'){
+                        $ctlName = explode('_', $va['name']);
+                        $ctlName = ucfirst($ctlName[0]).ucfirst($ctlName[1]);
+                        $va['url'] = $ctlName . '/index?cate_id='.$va['id'];
+                    }else{
+                        $va['url']      =   'Article/index?cate_id='.$va['id'];
+                    }
+                    
                     if(!empty($va['_child'])){
                         foreach ($va['_child'] as $k=>&$v){
-                            $v['url']   =   'Article/index?cate_id='.$v['id'];
+                            if($value['name'] == 'house' || $va['name'] == 'house'){
+                                $ctlName = explode('_', $va['name']);
+                                $ctlName = ucfirst($ctlName[0]).ucfirst($ctlName[1]);
+                                $va['url'] = $ctlName . '/index?cate_id='.$va['id'];
+                            }else{
+                                $v['url']   =   'Article/index?cate_id='.$v['id'];
+                            }
+                            
                             $v['pid']   =   $va['id'];
                             $is_child = $v['id'] == $cate_id ? true : false;
                         }
@@ -130,6 +145,7 @@ class ArticleController extends AdminController {
                 }
             }
         }
+
         $this->assign('nodes',      $cate);
         $this->assign('cate_id',    $this->cate_id);
 

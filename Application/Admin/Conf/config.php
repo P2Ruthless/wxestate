@@ -66,6 +66,14 @@ return array(
         'timeout'=>3600,
     ),
 
+    'PICTURE_UPLOAD_DRIVER'=>'local',
+    'UPLOAD_LOCAL_CONFIG'=>array(),
+    'PICTURE_WARTER'=> array(
+        'warterPic' => './Public/wartertest.png',
+        'position'  => 1,
+        'alpha'     => 100
+    ),
+
 
     /* 编辑器图片上传相关配置 */
     'EDITOR_UPLOAD' => array(

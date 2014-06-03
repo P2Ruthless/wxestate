@@ -21,7 +21,7 @@ $(function(){
 <block name="content">
 	<div class="mapbreak"><span>房屋买卖&nbsp;&gt;&nbsp;</span> {$city.id}二手房> {$info.area}二手房 </div>
 	<div class="left_hotlp">
-		<div class="left_hotlp_tt">{$info.title} {:W('Tag/show', array($info['feature'], 'fortab'))}</div>
+		<div class="left_hotlp_tt">{$info.title} {:W('Tag/showTag', array($info['feature'], 'fortab'))}</div>
 		<div class="home_pic">
             <div class="ad-gallery">
     			<div class="ad-image-wrapper"></div>
@@ -55,7 +55,7 @@ $(function(){
     </div>
     <div class="clear"></div>
     <div class="index_left_tt">房源描述</div>
-    配套设施：{:W('Tag/show', array($info['add_on'], 'fortab'))}
+    配套设施：{:W('Tag/showTag', array($info['add_on'], 'fortab'))}
     <div>
     {$info.desc_txt}
     </div>

@@ -84,4 +84,48 @@ class FileController extends AdminController {
         /* 返回JSON数据 */
         $this->ajaxReturn($return);
     }
+
+    /**
+     * 上传图片
+     * @author huajie <banhuajie@163.com>
+     */
+    public function uploadHousePics(){
+        //TODO: 用户登录检测
+        /* 返回标准数据 */
+        $return  = array('status' => 1, 'info' => '上传成功', 'data' => '');
+
+        if(!is_login()){
+            $return['status'] = 0;
+            $return['info'] = '请先登录';
+            $this->ajaxReturn($return);
+        }
+
+        /* 调用文件上传组件上传文件 */
+        $Picture = new \Admin\Model\PictureModel;
+        $pic_driver = C('PICTURE_UPLOAD_DRIVER');
+        $info = $Picture->upload(
+            $_FILES,
+            C('PICTURE_UPLOAD'),
+            C('PICTURE_UPLOAD_DRIVER'),
+            C("UPLOAD_{$pic_driver}_CONFIG")
+        );
+
+        /* 记录图片信息 */
+        if($info){
+            //图片水印
+            $picPath = '.'.$info['fileUpload']['path'];
+            $image = new \Think\Image();
+            $image->open($picPath)->water(C('PICTURE_WARTER.warterPic'), C('PICTURE_WARTER.position'), C('PICTURE_WARTER.alpha'))
+                ->save($picPath);
+
+            $return['status'] = 1;
+            $return = array_merge($info['fileUpload'], $return);
+        } else {
+            $return['status'] = 0;
+            $return['info']   = $Picture->getError();
+        }
+
+        /* 返回JSON数据 */
+        $this->ajaxReturn($return);
+    }
 }

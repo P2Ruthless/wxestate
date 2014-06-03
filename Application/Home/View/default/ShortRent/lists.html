@@ -1,0 +1,51 @@
+<extend name="Public/base"/>
+
+<block name="content">
+	<div class="mapbreak"><span>短期租房（{$totalCount}）&nbsp;&gt;&nbsp;</span></div>
+	<div class="left_hotlp">
+		<div class="filter-group">
+			<div class="filter-label">区域：</div>
+			{:W('District/showFilter', array("__ROOT__/home/sr/[area]/$type/$price/$pn", $city, $area))}
+		</div>
+		<div class="filter-group">
+			<div class="filter-label">类型：</div>
+			{:W('Lookup/showFilter', array("__ROOT__/home/sr/$area/[type]/$price/$pn", '[type]', 'SHORT_RENT_TYPE', $type))}
+		</div>
+		<div class="filter-group">
+			<div class="filter-label">价格：</div>
+			{:W('Lookup/showFilter', array("__ROOT__/home/sr/$area/$type/[price]/$pn", '[price]', 'SHORT_RENT_PRICE_RANGE', $price))}
+		</div>
+	</div>
+	<div class="right_hotlp">
+		<div class="guanzhu">
+
+		</div>
+	</div>
+    
+	<div class="clear"></div>
+	<!--搜索结果-->
+	<ul class="ssjg">
+		<volist name="dataList" id="data">
+		<li>
+			<a href="__ROOT__/home/sr/detail/{$data.id}" target="_blank"><img src="{$data.thumbnail}"/>
+			<div class="ssjg_tt">{$data.title}</div>
+			<div class="ssjg_xq">
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td align="left">{$data.community}</td>
+						<td align="left">{$data.bed_room}室{$data.live_room}厅</td>
+						<td align="left">{$data.square}平米</td>
+						<td align="left"><span>{$data.price}元/月</span></td>
+					</tr>
+				</table>
+			</div>
+			<div class="ssjg_text">
+				{$data.floor}层/{$data.floor_max}层,{$data.decorate|get_lookup_value='HOUSE_DECORATE_TYPE',###}<br />{$data.busi_area_name},{$data.structure|get_lookup_value='HOUSE_STRUCTURE_TYPE',###}<br />{$data.create_time|friendlyDate=###,'mohu'}发布
+				{:W('Tag/showTag', array($data['add_on']))}
+        	</div>
+			</a>
+    	</li>
+    	</volist>
+    </ul>
+    {:W('Pagination/showPagination', array("__ROOT__/home/sr/$area/$type/$price/[pn]", $pn, $totalCount, $scope))}
+</block>
