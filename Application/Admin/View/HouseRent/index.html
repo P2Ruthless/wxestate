@@ -1,0 +1,112 @@
+<extend name="Public/base"/>
+
+<!-- 子导航 -->
+<block name="sidebar">
+    <include file="Article:sidemenu" />
+</block>
+
+<block name="body">
+	<!-- 标题 -->
+	<div class="main-title">
+		<h2>
+		{$meta_title}({$totalCount}) [
+		<volist name="rightNav" id="nav">
+		<a href="{:U('HouseRent/lists','cate_id='.$nav['id'])}">{$nav.title}</a>
+			<if condition="count($rightNav) gt $i"><i class="ca"></i></if>
+		</volist>
+		]
+		<eq name="allow" value="0">（该分类不允许发布内容）</eq>
+		</h2>
+	</div>
+
+	<!-- 高级搜索 -->
+	<div class="search-form" style="margin-bottom:10px;">
+		<div class="filter-group">
+			<div class="filter-label">城市：</div>
+			{:W('Home/District/showCityFilter', array("__ROOT__/Admin/HouseRent/index/city/[city]/cate_id/$cate_id/area/$area/price/$price/rentType/$rentType/room/$room/pn/$pn", $city))}
+		</div>
+		<div class="filter-group">
+			<div class="filter-label">区域：</div>
+			{:W('Home/District/showFilter', array("__ROOT__/Admin/HouseRent/index/city/$city/cate_id/$cate_id/area/[area]/price/$price/rentType/$rentType/room/$room/pn/$pn", $city, $area))}
+		</div>
+		<div class="filter-group">
+			<div class="filter-label">价格：</div>
+			{:W('Home/Lookup/showFilter', array("__ROOT__/Admin/HouseRent/index/city/$city/cate_id/$cate_id/area/$area/price/[price]/rentType/$rentType/room/$room/pn/$pn", '[price]', 'HOUSE_RENT_PRICE_RANGE', $price))}
+		</div>
+		<div class="filter-group">
+			<div class="filter-label">类型：</div>
+			{:W('Home/Lookup/showFilter', array("__ROOT__/Admin/HouseRent/index/city/$city/cate_id/$cate_id/area/$area/price/$price/rentType/[rentType]/room/$room/pn/$pn", '[rentType]', 'HOUSE_RENT_TYPE', $rentType))}
+		</div>
+		<div class="filter-group last">
+			<div class="filter-label">户型：</div>
+			{:W('Home/Lookup/showFilter', array("__ROOT__/Admin/HouseRent/index/city/$city/cate_id/$cate_id/area/$area/price/$price/rentType/$rentType/room/[room]/pn/$pn", '[room]', 'HOUSE_RENT_BEDROOM', $room))}
+		</div>
+		<div class="sort-group">
+			<div class="filter-label">排序：</div>
+			{:W('Home/Sort/showSort', array(array('hs.square'=>'面积','hs.price'=>'价格','doc.create_time'=>'时间'), "__ROOT__/Admin/HouseRent/index/city/$city/cate_id/$cate_id/area/$area/price/$price/rentType/$rentType/room/$room/pn/1"))}
+		</div>
+		<div style="clear:both"></div>
+	</div>
+
+	<!-- 按钮工具栏 -->
+	<div class="cf">
+		<div class="fl">
+			<div class="btn-group">
+				<gt name="allow" value="0">
+					<a class="btn document_add" href="{:U('HouseRent/add')}">新 增</a>
+				<else/>
+					<button class="btn disabled" >新 增</button>
+				</gt>
+			</div>
+            <button class="btn ajax-post" target-form="ids" url="{:U("HouseRent/setStatus",array("status"=>1))}">启 用</button>
+			<button class="btn ajax-post" target-form="ids" url="{:U("HouseRent/setStatus",array("status"=>0))}">禁 用</button>
+			<input type="hidden" class="hide-data" name="cate_id" value="{$cate_id}"/>
+			<input type="hidden" class="hide-data" name="pid" value="0"/>
+			<button class="btn ajax-post confirm" target-form="ids" url="{:U("HouseRent/setStatus",array("status"=>-1))}">删 除</button>
+		</div>
+	</div>
+
+	<!-- 数据表格 -->
+    <div class="data-table">
+		<table>
+            <!-- 表头 -->
+            <thead>
+                <tr>
+                    <th class="row-selected row-selected">
+                        <input class="check-all" type="checkbox">
+                    </th>
+                    <th>标题</th>
+                    <th>区域</th>
+                    <th>商圈</th>
+                    <th>价格（元/月）</th>
+                    <th>户型</th>
+                    <th>类型</th>
+                    <th>状态</th>
+                </tr>
+            </thead>
+
+            <!-- 列表 -->
+            <tbody>
+                <volist name="dataList" id="data">
+                    <tr>
+                        <td><input class="ids" type="checkbox" value="{$data['id']}" name="ids[]"></td>
+                        <td>
+                        	<a href="{:U('HouseRent/edit', array('id'=>$data['id']))}">{$data.title}</a>
+                       	</td>
+                        <td>{$data.area_name}</td>
+                        <td>{$data.busi_area_name}</td>
+                        <td>{$data.price}</td>
+                        <td>{$data.bed_room}室{$data.live_room}厅</td>
+                        <td>{$data.rent_type|get_lookup_value='HOUSE_RENT_TYPE',###}</td>
+                        <td>{$data.status|get_lookup_value='DOC_STATUS',###}</td>
+                    </tr>
+                </volist>
+            </tbody>
+        </table>
+	</div>
+	<!-- 分页 -->
+    <div class="page">
+        {:W('Home/Pagination/showPagination', array("__ROOT__/Admin/HouseRent/index/city/$city/cate_id/$cate_id/area/$area/price/$price/rentType/$rentType/room/$room/pn/[pn]", $pn, $totalCount, $scope))}
+    </div>
+</div>
+</block>

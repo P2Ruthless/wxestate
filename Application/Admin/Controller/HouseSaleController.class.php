@@ -161,36 +161,9 @@ class HouseSaleController extends ArticleController{
 		if(!$res){
 			$this->error(D('Document')->getError());
 		}else{
-			if($res['id']){//更新房源图片,第一张为缩略图
-				$this->updatePictures($res['id'], I('house_pic', '[]'));
-			}
 			$this->success($res['id']?'更新成功':'新增成功', Cookie('__forward__'));
 		}
 	}
 
-	private function updatePictures($houseId, $pics){
-		$housePicList = json_decode($pics);
-		if(empty($housePicList)){
-			return;
-		}
-		
-		$picIds = array();
-		foreach($housePicList as $pic){
-			$picIds[] = $pic->id;
-		}
-		$picModel = M('Picture');
-		$picModel->where(array(
-			'id'=>array('IN', $picIds),
-			'uid'=>array('EQ', is_login())
-			))
-			->setField('pid', $houseId);
-		$thumbPic = $picModel->find($picIds[0]);
-		if(empty($thumbPic)){
-			return;
-		}
-		$thumbInfo = getThumbImage($thumbPic['path'], 100, 100, true);
-		if($thumbInfo){
-			D('HouseSale', 'Logic')->where('id=%d', $houseId)->setField('thumbnail', '/'.$thumbInfo['src']);
-		}
-	}
+	
 }

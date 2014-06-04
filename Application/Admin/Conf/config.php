@@ -74,6 +74,13 @@ return array(
         'alpha'     => 100
     ),
 
+    'HOUSE_PIC_DIMEN' => array(
+        'MAX_WIDTH' => 640,
+        'MAX_HEIGHT' => 640,
+        'THUMB_WIDTH' => 172,
+        'THUMB_HEIGHT' => 126
+    ),
+
 
     /* 编辑器图片上传相关配置 */
     'EDITOR_UPLOAD' => array(

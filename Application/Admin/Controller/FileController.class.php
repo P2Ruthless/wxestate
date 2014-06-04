@@ -115,7 +115,12 @@ class FileController extends AdminController {
             //图片水印
             $picPath = '.'.$info['fileUpload']['path'];
             $image = new \Think\Image();
-            $image->open($picPath)->water(C('PICTURE_WARTER.warterPic'), C('PICTURE_WARTER.position'), C('PICTURE_WARTER.alpha'))
+            $image->open($picPath)
+                ->thumb(C('HOUSE_PIC_DIMEN.MAX_WIDTH'), C('HOUSE_PIC_DIMEN.MAX_HEIGHT'))
+                ->save($picPath);
+            
+            $image->open($picPath)
+                ->water(C('PICTURE_WARTER.warterPic'), C('PICTURE_WARTER.position'), C('PICTURE_WARTER.alpha'))
                 ->save($picPath);
 
             $return['status'] = 1;

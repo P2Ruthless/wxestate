@@ -65,7 +65,7 @@
         var target_form = $(this).attr('target-form');
         var that = this;
         var nead_confirm=false;
-        if(editor){
+        if(typeof(editor)!='undefined'){
             editor.sync();
         }
         if( ($(this).attr('type')=='submit') || (target = $(this).attr('href')) || (target = $(this).attr('url')) ){
