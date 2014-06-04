@@ -18,8 +18,8 @@ class LookupWidget extends Controller{
 				$html .= ' class="active"';
 			}
 			$html .= '>';
-			$url = str_replace($replace, $lookup['name'], $url);
-			$html .= "<a href=\"{$url}\">{$lookup['val']}</a>";
+			$href = str_replace($replace, $lookup['name'], $url);
+			$html .= "<a href=\"{$href}\">{$lookup['val']}</a>";
 			$html .= '</li>';
 		}
 
