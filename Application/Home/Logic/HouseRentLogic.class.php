@@ -96,4 +96,18 @@ class HouseRentLogic extends BaseLogic{
 		}
 		return preg_match('/^\d+$/', $data['square']);
 	}
+
+	public function detail($id){
+		$data = parent::detail($id);
+		if($data == false){
+			return false;
+		}
+
+		//图片
+		$PicModel = M('Picture');
+		$housePicList = $PicModel->field('path')->where(array('pid'=>$id))->select();
+		$data['picList'] = $housePicList;
+
+		return $data;
+	}
 }

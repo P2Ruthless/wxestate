@@ -88,6 +88,25 @@ class HouseSaleLogic extends BaseLogic{
 		$housePicList = $PicModel->field('path')->where(array('pid'=>$id))->select();
 		$data['picList'] = $housePicList;
 
+		//附近三个
+		$nearbyList = $this->alias('hs')
+			->field('doc.title,hs.id,hs.thumbnail,hs.price,hs.contact_tel,area.name area_name,busi_area.name busi_area_name')
+			->join('to_document doc on hs.id=doc.id')
+			->join('to_district area on hs.area=area.id', 'LEFT')
+			->join('to_district busi_area on hs.busi_area=busi_area.id')
+			->where(array(
+				'doc.status'=>1,
+				'doc.category_id'=>10002,
+				'doc.deadline=0 OR doc.deadline>'.NOW_TIME,
+				'hs.busi_area'=>$data['busi_area'],
+				'hs.id'=>array('NEQ', $data['id'])
+			))
+			->order('id desc')
+			->limit(3)
+			->select();
+
+		$data['nearbyList'] = $nearbyList;
+
 		return $data;
 	}
 
@@ -104,7 +123,7 @@ class HouseSaleLogic extends BaseLogic{
 				'doc.status'=>1,
 				'doc.category_id'=>10002,
 				'doc.create_time'=>array('lt', NOW_TIME),
-				'deadline=0 OR deadline>'.NOW_TIME,
+				'doc.deadline=0 OR doc.deadline>'.NOW_TIME,
 				'doc.position & 4 = 4',
 				'hs.city'=> is_array($city) ? $city['id'] : $city
 			))

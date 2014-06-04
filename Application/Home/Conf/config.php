@@ -30,7 +30,7 @@ return array(
         'om/detail/:id' => 'Article/detail',
         'om'=>'OfficeMarket/lists',
         'hr/:area/:price/:room/:rentType/:pn'=>'HouseRent/lists',
-        'hr/:detail/:id' => 'HouseRent/detail',
+        'hr/:detail/:id' => 'Article/detail',
         'hs/:area/:price/:square/:room/:pn'=>'HouseSale/lists',
         'hs/detail/:id' => 'Article/detail',
         'sr/:area/:type/:price' => 'ShortRent/lists',

@@ -19,7 +19,7 @@ $(function(){
 </block>
 
 <block name="content">
-	<div class="mapbreak"><span>房屋买卖&nbsp;&gt;&nbsp;</span> {$city.id}二手房> {$info.area}二手房 </div>
+	<div class="mapbreak"><span>房屋租赁&nbsp;&gt;&nbsp;</span> {$city.id}二手房> {$info.area}二手房 </div>
 	<div class="left_hotlp">
 		<div class="left_hotlp_tt">{$info.title} {:W('Tag/showTag', array($info['feature'], 'fortab'))}</div>
 		<div class="home_pic">
@@ -37,21 +37,16 @@ $(function(){
             </div>
 		</div>
 		<div class="fcxq">
-		售价：<span class="redtext">{$info.price}</span>万
+		租金：<span class="redtext">{$info.price}</span>元/月
 		<br />
-		单价：<em><php> echo round($info['price'] * 10000 / $info['square'], 2)</php>元/平米</em>&nbsp;&nbsp;&nbsp;&nbsp;首付：<em>{$info.down_payment}万</em>&nbsp;&nbsp;&nbsp;&nbsp;月供：<em>{$info.monthly}元</em>
-		<br />
-        房型：<em>{$info.bed_room}室{$info.live_room}厅</em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;建筑面积：<em>{$info.square}平米</em>
+        房型：<em>{$info.bed_room}室{$info.live_room}厅</em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;面积：<em>{$info.square}平米</em>
         <br />
         朝向：<em>{$info.face|get_lookup_value='HOUSE_FACE_TYPE', ###}</em>
         <br />
         楼层：<em>{$info.floor}层({$info.floor_max}层)</em>
         <br />
         <div class="tel_bp">{$info.contact_tel}</div>
-        年代：<em>{$info.build_year}年</em> &nbsp;&nbsp;&nbsp;&nbsp;结构：<em>{$info.structure|get_lookup_value='HOUSE_STRUCTURE_TYPE',###}</em>
-        <br /> 
-        装修：<em>{$info.decorate|get_lookup_value='HOUSE_DECORATE_TYPE',###}</em>&nbsp;&nbsp;&nbsp;&nbsp;  住宅类别：<em>{$info.build_type|get_lookup_value='HOUSE_BUILD_TYPE',###}</em><br />
-        产权性质：<em>{$info.property_type|get_lookup_value='HOUSE_PROPERTY_TYPE',###}</em><br/>
+        装修：<em>{$info.decorate|get_lookup_value='HOUSE_DECORATE_TYPE',###}</em>
     </div>
     <div class="clear"></div>
     <div class="index_left_tt">房源描述</div>

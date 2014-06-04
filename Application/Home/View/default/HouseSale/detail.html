@@ -66,33 +66,19 @@ $(function(){
     <div id="baidumap_forpick" style="height:300px;max-width:726px"></div>
     <div class="left_hotlp_tt">附近推荐</div>
       <ul class="hotlp_box">
-   	    <li><div class="hotlp_box_line">
-            <a href="#"><img  /></a>
-            <a href="#" class="hotlp_lpname">城市印象在售</a>
+        <volist name="info.nearbyList" id="nearby">
+   	    <li>
+            <div class="hotlp_box_line">
+            <a href="__ROOT__/home/hs/detail/{$nearby.id}"><img src="{$nearby.thumbnail}" /></a>
+            <a href="__ROOT__/home/hs/detail/{$nearby.id}" class="hotlp_lpname">{$nearby.title}</a>
             <div class="clear"></div>
-            均价：14000元/平米<br />
-            电话：400-606-6969 转 27829<br />
-            地址：甘井子区迎客路中段(机场附近)<br />
-   	    </div>
-            </li>
-            
-             <li><div class="hotlp_box_line">
-            <a href="#"><img  /></a>
-            <a href="#" class="hotlp_lpname">城市印象在售</a>
-            <div class="clear"></div>
-            均价：14000元/平米<br />
-            电话：400-606-6969 转 27829<br />
-            地址：甘井子区迎客路中段(机场附近)<br />
-             </div></li>
-             <li><div class="hotlp_box_line">
-            <a href="#"><img  /></a>
-            <a href="#" class="hotlp_lpname">城市印象在售</a>
-            <div class="clear"></div>
-            均价：14000元/平米<br />
-            电话：400-606-6969 转 27829<br />
-            地址：甘井子区迎客路中段(机场附近)<br />
-            <a href="#"></a></div> </li>
-          <div class="clear"></div>
+            价格：{$nearby.price}万<br />
+            电话：{$nearby.contact_tel}<br />
+            地址：{$nearby.area_name}{$nearby.busi_area_name}<br />
+   	        </div>
+        </li>
+        </volist>
+        <div class="clear"></div>
         </ul>
     </div>
     
