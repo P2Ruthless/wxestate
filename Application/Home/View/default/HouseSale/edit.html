@@ -28,7 +28,42 @@ input.short{
 <script type="text/javascript" src="__STATIC__/scripts/imageexplorer.js"></script>
 <script type="text/javascript" src="__STATIC__/qtip/jquery.qtip.js"></script>
 <script type="text/javascript" src="__STATIC__/oneplus/js/ext/toastr/toastr.min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=5d659c6eae4dd6ee412466047f735196"></script>
 <script type="text/javascript">
+function showBaiduMap(longitude, latitude){
+	//baidu map
+	var map = new BMap.Map("baidumap_forpick");
+	if(longitude == 0 || latitude == 0){
+		map.centerAndZoom("大连",12);
+	}else{
+		map.centerAndZoom(new BMap.Point(longitude, latitude), 15);
+	}
+	map.enableScrollWheelZoom();
+
+	var marker;
+
+	map.addEventListener("tilesloaded",function(){
+		if(marker){
+			return;
+		}
+		marker = new BMap.Marker(new BMap.Point(map.getCenter().lng,map.getCenter().lat));
+		marker.enableDragging();
+		marker.addEventListener('dragend', function(e){
+			$('#longitude').val(marker.getPosition().lng);
+			$('#latitude').val(marker.getPosition().lat);
+		});
+		map.addOverlay(marker);
+		
+		$('#longitude').val(marker.getPosition().lng);
+		$('#latitude').val(marker.getPosition().lat);
+		
+		map.addEventListener("click", function(e){
+			$('#longitude').val(e.point.lng);
+			$('#latitude').val(e.point.lat);
+			marker.setPosition(e.point);
+		});
+	});
+}
 $(function(){
 	$("#busi_area").chained("#area");
 
@@ -92,6 +127,10 @@ $(function(){
 			}
 		}
 	});
+
+	var longitude = $('#longitude').val();
+    var latitude = $('#latitude').val();
+    showBaiduMap(longitude, latitude);
 });
 </script>
 </block>
@@ -200,6 +239,18 @@ $(function(){
 		<label for="desc_txt">房源描述</label>
 		<textarea id="desc_txt" name="desc_txt">{$data.desc_txt|default=''}</textarea>
 		{:hook('documentEditFormContent',array('id'=>'desc_txt', name=>'desc_txt','value'=>htmlspecialchars($data['desc_txt'])))}
+	</div>
+
+	<div class="form-item cf">
+		<label class="item-label">坐标</label>
+		<div class="controls">
+			<input id="longitude" name="longitude" value="{$data.longitude}" class="text" readOnly/>
+			<input id="latitude" name="latitude" value="{$data.latitude}" class="text" readOnly/>
+		</div>
+	</div>
+
+	<div class="form-item cf">
+		<div class="controls" id="baidumap_forpick" style="height:300px"></div>
 	</div>
 
 	<div id="house_pic_upload ">
