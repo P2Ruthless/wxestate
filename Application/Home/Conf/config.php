@@ -34,7 +34,8 @@ return array(
         'hs/:area/:price/:square/:room/:pn'=>'HouseSale/lists',
         'hs/detail/:id' => 'Article/detail',
         'sr/:area/:type/:price' => 'ShortRent/lists',
-        'sr/detail/:id' => 'Article/detail'
+        'sr/detail/:id' => 'Article/detail',
+        'am/detail/:id' => 'Article/detail'
     ),
 
     /* 默认城市 517大连 */

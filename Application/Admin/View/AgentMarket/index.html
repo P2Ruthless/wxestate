@@ -1,0 +1,87 @@
+<extend name="Public/base"/>
+
+<!-- 子导航 -->
+<block name="sidebar">
+    <include file="Article:sidemenu" />
+</block>
+
+<block name="body">
+	<!-- 标题 -->
+	<div class="main-title">
+		<h2>
+		{$meta_title}({$totalCount}) [
+		<volist name="rightNav" id="nav">
+		<a href="{:U('AgentMarket/index','cate_id='.$nav['id'])}">{$nav.title}</a>
+			<if condition="count($rightNav) gt $i"><i class="ca"></i></if>
+		</volist>
+		<present name="article">：<a href="{:U('AgentMarket/index','cate_id='.$cate_id.'&pid='.$article['id'])}">{$article.title}</a></present>
+		]
+		<eq name="allow" value="0">（该分类不允许发布内容）</eq>
+		</h2>
+	</div>
+
+	<!-- 高级搜索 -->
+	<div class="search-form" style="margin-bottom:10px;">
+		
+		<div style="clear:both"></div>
+	</div>
+
+	<!-- 按钮工具栏 -->
+	<div class="cf">
+		<div class="fl">
+			<div class="btn-group">
+				<gt name="allow" value="0">
+					<a class="btn document_add" href="{:U('AgentMarket/add')}">新 增</a>
+				<else/>
+					<button class="btn disabled" >新 增</button>
+				</gt>
+			</div>
+            <button class="btn ajax-post" target-form="ids" url="{:U("AgentMarket/setStatus",array("status"=>1))}">启 用</button>
+			<button class="btn ajax-post" target-form="ids" url="{:U("AgentMarket/setStatus",array("status"=>0))}">禁 用</button>
+			<input type="hidden" class="hide-data" name="cate_id" value="{$cate_id}"/>
+			<input type="hidden" class="hide-data" name="pid" value="0"/>
+			<button class="btn ajax-post confirm" target-form="ids" url="{:U("AgentMarket/setStatus",array("status"=>-1))}">删 除</button>
+		</div>
+	</div>
+
+	<!-- 数据表格 -->
+    <div class="data-table">
+		<table>
+            <!-- 表头 -->
+            <thead>
+                <tr>
+                    <th class="row-selected row-selected">
+                        <input class="check-all" type="checkbox">
+                    </th>
+                    <th>标题</th>
+                    <th>状态</th>
+                    <th>图片</th>
+                </tr>
+            </thead>
+
+            <!-- 列表 -->
+            <tbody>
+                <volist name="dataList" id="data">
+                    <tr>
+                        <td><input class="ids" type="checkbox" value="{$data['id']}" name="ids[]"></td>
+                        <td>
+                        	<a href="{:U('AgentMarket/edit', array('id'=>$data['id']))}">{$data.title}</a>
+                       	</td>
+                        <td>{$data.status|get_lookup_value='DOC_STATUS',###}</td>
+                        <td>
+                        	<volist name=":get_lookup_list('AGENT_MARKET_PIC_TYPE')" id="picType">
+                        	<a href="{:U('AgentMarket/editPics', array('id'=>$data['id'], 'type'=>$picType['name']))}">{$picType.val}</a>
+                        	&nbsp;
+                        	</volist>
+                        </td>
+                    </tr>
+                </volist>
+            </tbody>
+        </table>
+	</div>
+	<!-- 分页 -->
+    <div class="page">
+        
+    </div>
+</div>
+</block>

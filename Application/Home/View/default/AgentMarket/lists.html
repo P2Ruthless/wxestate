@@ -1,0 +1,100 @@
+<extend name="Public/base"/>
+
+<block name="content">
+	<div class="mapbreak"><span>房屋买卖（{$totalCount}）&nbsp;&gt;&nbsp;</span></div>
+	<div class="left_hotlp">
+		<div class="left_hotlp_tt">热门楼盘</div>
+		<ul class="hotlp_box">
+			<volist name="amList" id="am" mod="3">
+			<li>
+				<div class="hotlp_box_line">
+					<a href="__ROOT__/home/am/detail/{$am.id}" target="_blank"><img src="__ROOT__{$am.thumbnail}" /></a>
+					<a href="#" class="hotlp_lpname">{$am.title}</a><span>在售</span>
+					<div class="clear"></div>
+					均价：{$am.price_avg}元/平米<br />
+					电话：{$am.contact_tel}<br />
+					地址：{$am.area_name}{$am.busi_area_name}{$am.loc_txt}<br />
+					<a href="#">实景6张</a>&nbsp;&nbsp;<a href="#"> 户型4张</a>
+					<a href="#"></a> <div class="hotlp_num">{$key + 1}</div>
+				</div>
+			</li>
+			<eq name="mod" value="2">
+			<div class="clear"></div>
+			</eq>
+			</volist>
+		</ul>
+	</div>
+	<div class="right_hotlp">
+		<div class="guanzhu">
+
+		</div>
+
+		<div class="right_box">
+        	<div class="right_box_tt">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td>本月新开</td>
+                <td align="right"><a href="#">更多&gt;&gt;</a></td>
+              </tr>
+            </table>
+			</div>
+            <ul class="toplist">
+            <li class="top1">
+            	<div class="num">1</div>
+            	<img  />
+                <a href="#">城市印象</a><p>5666元/平米<br />开发区</p>
+                <div class="clear"></div>
+            </li>
+            <li class="top2">
+            <div class="num">2</div>
+            <a href="#">城市印象</a>
+            <p>5666元/平</p>
+            <div class="clear"></div>
+            </li>
+            <li class="top3">
+            <div class="num">3</div>
+            <a href="#">城市印象</a>
+            <p>5666元/平</p>
+            <div class="clear"></div>
+            </li>
+            
+            <li class="topn">
+            <div class="num">4</div>
+            <a href="#">城市印象</a>
+            <p>5666元/平</p>
+            <div class="clear"></div>
+            <li class="topn">
+            <div class="num">5</div>
+            <a href="#">城市印象</a>
+            <p>5666元/平</p>
+            <div class="clear"></div>
+            <li class="topn">
+            <div class="num">6</div>
+            <a href="#">城市印象</a>
+            <p>5666元/平</p>
+            <div class="clear"></div>
+            <li class="topn">
+            <div class="num">7</div>
+            <a href="#">城市印象</a>
+            <p>5666元/平</p>
+            <div class="clear"></div>
+            <li class="topn">
+            <div class="num">8</div>
+            <a href="#">城市印象</a>
+            <p>5666元/平</p>
+            <div class="clear"></div>
+            <li class="topn">
+            <div class="num">9</div>
+            <a href="#">城市印象</a>
+            <p>5666元/平</p>
+            <div class="clear"></div>
+            
+            </li>
+            </ul>
+        
+      </div>
+	</div>
+    
+	<div class="clear"></div>
+    
+</block>

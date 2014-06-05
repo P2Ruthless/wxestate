@@ -1,9 +1,5 @@
 <extend name="Public/base"/>
 
-<block name="style">
-<link rel="stylesheet" type="text/css" href="__CSS__/">
-</block>
-
 <block name="content">
 	<div class="mapbreak"><span>房屋买卖（{$totalCount}）&nbsp;&gt;&nbsp;</span></div>
 	<div class="left_hotlp">
@@ -40,7 +36,7 @@
 	<ul class="ssjg">
 		<volist name="dataList" id="data">
 		<li>
-			<a href="__ROOT__/home/hs/detail/{$data.id}" target="_blank"><img src="{$data.thumbnail}"/>
+			<a href="__ROOT__/home/hs/detail/{$data.id}" target="_blank"><img src="__ROOT__{$data.thumbnail}"/>
 			<div class="ssjg_tt">{$data.title}</div>
 			<div class="ssjg_xq">
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">

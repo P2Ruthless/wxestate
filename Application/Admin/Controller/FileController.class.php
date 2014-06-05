@@ -112,15 +112,50 @@ class FileController extends AdminController {
 
         /* 记录图片信息 */
         if($info){
-            //图片水印
+            //处理图片大小
             $picPath = '.'.$info['fileUpload']['path'];
             $image = new \Think\Image();
             $image->open($picPath)
                 ->thumb(C('HOUSE_PIC_DIMEN.MAX_WIDTH'), C('HOUSE_PIC_DIMEN.MAX_HEIGHT'))
                 ->save($picPath);
             
+            //图片水印
             $image->open($picPath)
                 ->water(C('PICTURE_WARTER.warterPic'), C('PICTURE_WARTER.position'), C('PICTURE_WARTER.alpha'))
+                ->save($picPath);
+
+            $return['status'] = 1;
+            $return = array_merge($info['fileUpload'], $return);
+        } else {
+            $return['status'] = 0;
+            $return['info']   = $Picture->getError();
+        }
+
+        /* 返回JSON数据 */
+        $this->ajaxReturn($return);
+    }
+
+    public function uploadThumb($w=100, $h=100){
+        /* 返回标准数据 */
+        $return  = array('status' => 1, 'info' => '上传成功', 'data' => '');
+
+        /* 调用文件上传组件上传文件 */
+        $Picture = D('Picture');
+        $pic_driver = C('PICTURE_UPLOAD_DRIVER');
+        $info = $Picture->upload(
+            $_FILES,
+            C('PICTURE_UPLOAD'),
+            C('PICTURE_UPLOAD_DRIVER'),
+            C("UPLOAD_{$pic_driver}_CONFIG")
+        ); //TODO:上传到远程服务器
+
+        /* 记录图片信息 */
+        if($info){
+            $picPath = '.'.$info['fileUpload']['path'];
+
+            $image = new \Think\Image();
+            $image->open($picPath)
+                ->thumb($w, $h)
                 ->save($picPath);
 
             $return['status'] = 1;

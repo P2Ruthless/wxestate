@@ -56,12 +56,11 @@ $(function(){
 	$("#house_pic_file").uploadify({
 		'height': 34,
 		'swf': '__STATIC__/uploadify/uploadify.swf',
-		'uploader': "{:U('File/uploadHousePics')}",
+		'uploader': "__ROOT__/Admin/File/uploadThumb/w/219/h/172",
 		'fileObjName': 'fileUpload',
 		'buttonClass': 'btn btn-primary',
-		'multi': true,
+		'multi': false,
 		'queueID': 'queue_container',
-		'uploadLimit': 8,
 		//'queueSizeLimit': 5,
 		'fileSizeLimit': '2MB',
 		'buttonText': '上传图片',
@@ -107,6 +106,7 @@ $(function(){
 </block>
 
 <block name="body">
+	<script type="text/javascript" src="__STATIC__/uploadify/jquery.uploadify.min.js"></script>
 	<div class="main-title cf">
 		<h2>
 			{$meta_title}
@@ -139,7 +139,7 @@ $(function(){
 		<!-- 基础文档模型 -->
 		<div id="tab1" class="tab-pane in tab1">
 			<div class="form-item cf">
-				<label class="item-label">标题</label>
+				<label class="item-label">楼盘名称</label>
 				<div class="controls">
 					<input type="text" class="text input-large" name="title" value="{$info.title}">
 				</div>
@@ -153,81 +153,105 @@ $(function(){
 			</div>
 
 			<div class="form-item cf">
-				<label for="community" class="item-label">小区</label>
+				<label class="item-label">位置备注</label>
 				<div class="controls">
-					<input type="text" id="community" name="community" class="text" value="{$info.community}"/>
+					<input type="text" name="loc_txt" class="text" value="{$info.loc_txt}"/>
 				</div>
 			</div>
 
 			<div class="form-item cf">
-				<label for="community" class="item-label">户型</label>
-				<div class="controls">
-					<input type="text" name="bed_room" value="{$info.bed_room|default=''}" class="text"/>室
-					<input type="text" name="live_room" value="{$info.live_room|default=''}" class="text"/>厅
-					<input type="text" name="toilet" value="{$info.toilet|default=''}" class="text"/>卫
+				<label class="item-label">均价</label>
+				<div>
+					<input type="text" name="price_avg" class="text" value="{$info.price_avg}"/>
 				</div>
 			</div>
 
 			<div class="form-item cf">
-				<label for="community" class="item-label">楼层</label>
-				<div class="controls">
-					第<input type="text" name="floor" value="{$info.floor}" class="text"/>层
-					共<input type="text" name="floor_max" value="{$info.floor_max}" class="text"/>层
+				<label class="item-label">公建均价</label>
+				<div>
+					<input type="text" name="price_avg2" class="text" value="{$info.price_avg2}"/>
 				</div>
 			</div>
 
 			<div class="form-item cf">
-				<label class="item-label">建筑类型</label>
-				<div class="controls">
-					{:W('Home/Lookup/showSelect', array('build_type', $info['build_type'], 'HOUSE_BUILD_TYPE', false, array('id'=>'build_type')))}
-					{:W('Home/Lookup/showSelect', array('structure', $info['structure'], 'HOUSE_STRUCTURE_TYPE', array('name'=>'0', 'val'=>'建筑结构'), array('id'=>'structure')))}
-					{:W('Home/Lookup/showSelect', array('decorate', $info['decorate'], 'HOUSE_DECORATE_TYPE', array('name'=>'0', 'val'=>'装修'), array('id'=>'decorate')))}
-					{:W('Home/Lookup/showSelect', array('face', $info['face'], 'HOUSE_FACE_TYPE', array('name'=>'0', 'val'=>'朝向'), array('id'=>'face')))}
+				<label class="item-label">优惠信息</label>
+				<div>
+					<input type="text" name="pref_txt" class="text" value="{$info.pref_txt}"/>
 				</div>
 			</div>
 
 			<div class="form-item cf">
-				<label class="item-label">价格</label>
+				<label class="item-label">户型面积</label>
 				<div class="controls">
-					<input type="text" name="price" value="{$info.price}" class="text"/>万元
-					<input type="checkbox" name="loan_enable" value="N" <if condition="info.loan_enable eq 'N'"> checked</if>/>不可贷款
+					<label class="textarea input-large">
+						<textarea name="room_square_txt">{$info.room_square_txt|default=''}</textarea>
+					</label>
 				</div>
 			</div>
 
 			<div class="form-item cf">
-				<label for="down_payment">首付</label>
-				<input type="text" name="down_payment" value="{$info.down_payment|default=''}" class="text"/>万元
-				<label for="monthly">月供</label>
-				<input type="text" name="monthly" value="{$info.monthly|default=''}" class="text"/>元
-			</div>
-
-			<div class="form-item cf">
-				<label class="item-label">面积</label>
+				<label class="item-label">交通状况</label>
 				<div class="controls">
-					建筑面积<input type="text" name="square" value="{$info.square}" class="text"/>m<sup>2</sup>
-					套内面积<input type="text" name="inner_square" value="{$info.inner_square}" class="text"/>m<sup>2</sup>
+					<label class="textarea input-large">
+						<textarea name="traffic">{$info.traffic|default=''}</textarea>
+					</label>
 				</div>
 			</div>
 
 			<div class="form-item cf">
-				<label for="property_right">产权</label>
+				<label class="item-label">首付</label>
+				<input type="text" name="down_payment" value="{$info.down_payment|default=''}" class="text"/>
+				-
+				<input type="text" name="down_payment_max" value="{$info.down_payment_max|default=''}" class="text"/>
+				万元
+				<label class="item-label">月供</label>
+				<input type="text" name="monthly" value="{$info.monthly|default=''}" class="text"/>
+				-
+				<input type="text" name="monthly_max" value="{$info.monthly_max|default=''}" class="text"/>
+				元
+			</div>
+
+			<div class="form-item cf">
+				<label class="item-label">物业类型</label>
+				{:W('Home/Lookup/showSelect', array('property_type', $info['property_type'], 'HOUSE_PROPERTY_RIGHT', false, array('id'=>'property_type')))}
+				<label class="item-label">建筑类别</label>
+				{:W('Home/Lookup/showSelect', array('build_type', $info['build_type'], 'HOUSE_PROPERTY_TYPE', false, array('id'=>'build_type')))}
+			</div>
+
+			<div class="form-item cf">
+				<label class="item-label">产权</label>
 				{:W('Home/Lookup/showSelect', array('property_right', $info['property_right'], 'HOUSE_PROPERTY_RIGHT', false, array('id'=>'property_right')))}
-				<label for="property_type">产权类型</label>
-				{:W('Home/Lookup/showSelect', array('property_type', $info['property_type'], 'HOUSE_PROPERTY_TYPE', false, array('id'=>'property_type')))}
 			</div>
 
 			<div class="form-item cf">
-				<label class="item-label">建筑年代</label>
+				<label class="item-label">物业费</label>
+				<input name="property_price" value="{$info.property_price}"/>
+			</div>
+
+			<div class="form-item cf">
+				<label class="item-label">开盘时间</label>
 				<div class="controls">
-					<input type="text" name="build_year" value="{$info.build_year}" class="text"/>
+					<input type="text" name="open_time" value="{$info.open_time}" class="text time"/>
 				</div>
 			</div>
 
 			<div class="form-item cf">
-				<label class="item-label">配套设施</label>
+				<label class="item-label">入住时间</label>
 				<div class="controls">
-					{:W('Home/Tag/showInput', array('add_on', $info['add_on'], 4))}
+					<input type="text" name="in_time" value="{$info.in_time}" class="text time"/>
 				</div>
+			</div>
+
+			<div class="form-item cf">
+				<label class="item-label">户数</label>
+				<div class="controls">
+					<input type="text" name="room_count" value="{$info.room_count}" class="text"/>
+				</div>
+			</div>
+
+			<div class="form-item cf">
+				<label class="item-label">装修</label>
+				{:W('Home/Lookup/showSelect', array('decorate', $info['decorate'], 'HOUSE_DECORATE_TYPE', false, array('id'=>'property_type')))}
 			</div>
 
 			<div class="form-item cf">
@@ -238,10 +262,16 @@ $(function(){
 			</div>
 
 			<div class="form-item cf">
-				<label for="desc_txt">房源描述</label>
+				<label class="item-label">预售证</label>
 				<div class="controls">
-					<textarea id="desc_txt" name="desc_txt">{$info.desc_txt|default=''}</textarea>
-					{:hook('documentEditFormContent',array('id'=>'desc_txt', name=>'desc_txt','value'=>htmlspecialchars($info['desc_txt'])))}
+					<input type="text" name="paper_ys" value="{$info.paper_ys}" class="text"/>
+				</div>
+			</div>
+
+			<div class="form-item cf">
+				<label class="item-label">开发商</label>
+				<div class="controls">
+					<input type="text" name="dev" value="{$info.dev}" class="text"/>
 				</div>
 			</div>
 
@@ -271,20 +301,6 @@ $(function(){
 						<div id="queue_container"></div>
 						<div style="clear:both"></div>
 					</div>
-				</div>
-			</div>
-
-			<div class="form-item cf">
-				<label for="contact_type" class="item-label">身份</label>
-				<div class="controls">
-					{:W('Home/Lookup/showSelect', array('contact_type', $info['contact_type'], 'HOUSE_CONTACT_TYPE', false, array('id'=>'contact_type')))}
-				</div>
-			</div>
-
-			<div class="form-item cf">
-				<label for="contact" class="item-label">联系人</label>
-				<div class="controls">
-					<input type="text" id="contact" name="contact" value="{$info.contact|default=''}" class="text"/>
 				</div>
 			</div>
 
@@ -340,7 +356,7 @@ $(function(){
 			<div class="form-item cf">
 				<label class="item-label">截至时间<span class="check-tips">（0-永久有效）</span></label>
 				<div class="controls">
-					<input type="text" name="deadline" class="text input-large time" value="{$info.deadline|time_format}" placeholder="请选择时间" />
+					<input type="text" name="deadline" class="text input-large time" value="{$info.deadline}" placeholder="请选择时间" />
 				</div>
 			</div>
 		</div>

@@ -7,7 +7,7 @@
 	<div class="index_left_tt">房屋买卖<span>最新二手房源</span></div>
 	<volist name="houseSaleList" id="houseSale">
 	<a href="__ROOT__/home/hs/detail/{$houseSale.id}" target="_blank" class="index_rslist">
-		<img src="{$houseSale.thumbnail}" />
+		<img src="__ROOT__{$houseSale.thumbnail}" />
 		<span>{$houseSale.area_name} {$houseSale.busi_area_name}</span><em>{$houseSale.price}万</em>
 		<div class="pingshu">{$houseSale.bed_room}室{$houseSale.live_room}厅 | {$houseSale.square}平米</div>    
 	</a>
@@ -18,7 +18,7 @@
 			<div class="index_left_tt">房屋租赁</div>
 			<volist name="houseRentList" id="houseRent">
 			<a href="#" class="fangwuzulin_list">
-				<img src="{$houseRent.thumbnail|default=''}" />
+				<img src="__ROOT__{$houseRent.thumbnail|default=''}" />
 			{$houseRent.area_name}-{$houseRent.busi_area_name}<br />
 			{$houseRent.bed_room}室{$houseRent.live_room}厅，{$houseRent.decorate|get_lookup_value='HOUSE_DECORATE_TYPE',###}<br />
 			<span>{$houseRent.price}元/月</span>

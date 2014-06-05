@@ -29,7 +29,7 @@ $(function(){
                     <div class="ad-thumbs">
                         <ul class="ad-thumb-list">
                             <volist id='housePic' name='info.picList'>
-                            <li><a href="{$housePic.path}"><img style="height:60px;" src="{$housePic.path}"/></a></li>
+                            <li><a href="__ROOT__{$housePic.path}"><img style="height:60px;" src="__ROOT__{$housePic.path}"/></a></li>
                             </volist>
                         </ul>
                     </div>
@@ -60,7 +60,7 @@ $(function(){
     {$info.desc_txt}
     </div>
     <volist id='housePic' name='info.picList'>
-    <img src="{$housePic.path}" style="max-width:726px"/>
+    <img src="__ROOT__{$housePic.path}" style="max-width:726px"/>
     </volist>
      <div class="index_left_tt">地理位置</div>
     <div id="baidumap_forpick" style="height:300px;max-width:726px"></div>
@@ -69,7 +69,7 @@ $(function(){
         <volist name="info.nearbyList" id="nearby">
    	    <li>
             <div class="hotlp_box_line">
-            <a href="__ROOT__/home/hs/detail/{$nearby.id}"><img src="{$nearby.thumbnail}" /></a>
+            <a href="__ROOT__/home/hs/detail/{$nearby.id}"><img src="__ROOT__{$nearby.thumbnail}" /></a>
             <a href="__ROOT__/home/hs/detail/{$nearby.id}" class="hotlp_lpname">{$nearby.title}</a>
             <div class="clear"></div>
             价格：{$nearby.price}万<br />

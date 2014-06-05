@@ -1,0 +1,129 @@
+<extend name="Public/base" />
+
+<block name="style">
+<style>
+td img{
+	width: 200px;
+}
+</style>
+</block>
+
+<block name="headscript">
+<script type="text/javascript" src="__STATIC__/uploadify/jquery.uploadify.mymin.js"></script>
+<script type="text/javascript" src="__STATIC__/scripts/imageexplorer.js"></script>
+<script type="text/javascript">
+var picItemTpl = "<tr data-id=\"{picId}\">\
+<td><img src=\"{picPath}\"/></td>\
+<td>\
+<input type=\"hidden\" name=\"picId[]\" value=\"{picId}\"/>\
+<label class=\"textarea input-large\">\
+<textarea name=\"picDesc[]\"></textarea>\
+</label>\
+</td>\
+<td><a href=\"javascript:removePic('{picId}')\">删除</a></td>\
+</tr>";
+function addPic(pic){
+	if(!pic || !pic.id){
+		return;
+	}
+	var itemDomStr = picItemTpl.replace(/\{picPath\}/g, "__ROOT__" + pic.path);
+	itemDomStr = itemDomStr.replace(/\{picId\}/g, pic.id);
+
+	$(itemDomStr).appendTo($('#pic_container'));
+}
+function removePic(picId){
+	$('tr[data-id="' + picId + '"]').remove();
+}
+$(function(){
+
+	$("#house_pic_file").uploadify({
+		'height': 34,
+		'swf': '__STATIC__/uploadify/uploadify.swf',
+		'uploader': "{:U('File/uploadHousePics')}",
+		'fileObjName': 'fileUpload',
+		'buttonClass': 'btn btn-primary',
+		'multi': true,
+		'queueID': 'queue_container',
+		'uploadLimit': 8,
+		//'queueSizeLimit': 5,
+		'fileSizeLimit': '2MB',
+		'buttonText': '上传图片',
+		'fileTypeExts': '*.jpg; *.png; *.gif; *.bmp',
+		'fileTypeDesc': 'JPG,PNG,GIF,BMP',
+		'removeTimeout': 1,
+		'formData': {'PHPSESSID': '<?php echo session_id();?>'},
+		'onUploadSuccess': function(file, data, response){
+			var info = $.parseJSON(data);
+			if(info.status == 1){
+				addPic(info);
+			}else{
+				alert(info.info);
+			}
+		},
+		'onUploadError': function(file, errorCode, errorMsg, errorString){
+			//alert(file.name + " 上传失败 " + errorCode + " " + errorMsg + " " + errorString);
+		},
+		'onFallback': function(){
+			alert('请先安装Flash插件');
+		}
+	});
+});
+
+</script>
+</block>
+
+<block name="sidebar">
+	<include file="Article:sidemenu" />
+</block>
+
+<block name="body">
+	<div class="main-title cf">
+		<h2>
+			{$meta_title} - {:get_lookup_value('AGENT_MARKET_PIC_TYPE', $type)}
+		</h2>
+	</div>
+	<form action="{:U('AgentMarket/updatePics')}" method="post" class="form-horizontal">
+	<input type="hidden" name="type" value="{$type}"/>
+	<input type="hidden" name="amid" value="{$agentMarker.id}"/>
+
+	<div class="data-table">
+		<table>
+			<thead>
+				<th>#</th>
+				<th>描述</th>
+				<th>操作</th>
+			</thead>
+			<tbody id="pic_container">
+				<volist name="amPicList" id="amPic">
+				<tr data-id="{$amPic.id}">
+					<td><img src="__ROOT__{$amPic.path}"></td>
+					<td>
+						<input type="hidden" name="picId[]" value="{$amPic.id}"/>
+						<label class="textarea input-large">
+						<textarea name="picDesc[]">{$amPic.desc_txt}</textarea>
+						</label>
+					</td>
+					<td><a href="javascript:removePic('{$amPic.id}')">删除</a></td>
+				</tr>
+				</volist>
+			</tbody>
+		</table>
+	</div>
+
+	<div class="form-item cf">
+		<div id="queue_container"></div>
+	</div>
+
+	<div class="form-item cf">
+		<div class="controls">
+			<input type="file" id="house_pic_file"/>
+		</div>
+	</div>
+
+	<div class="form-item cf">
+		<button class="btn submit-btn ajax-post hidden" id="submit" type="submit" target-form="form-horizontal">确 定</button>
+		<a class="btn btn-return" href="{:U('AgentMarket/index')}">返 回</a>
+	</div>
+
+	</form>
+</block>
