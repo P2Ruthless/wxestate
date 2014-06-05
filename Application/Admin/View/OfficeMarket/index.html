@@ -1,0 +1,119 @@
+<extend name="Public/base"/>
+
+<!-- 子导航 -->
+<block name="sidebar">
+    <include file="Article:sidemenu" />
+</block>
+
+<block name="body">
+	<!-- 标题 -->
+	<div class="main-title">
+		<h2>
+		{$meta_title}({$totalCount}) [
+		<volist name="rightNav" id="nav">
+		<a href="{:U('HouseSale/lists','cate_id='.$nav['id'])}">{$nav.title}</a>
+			<if condition="count($rightNav) gt $i"><i class="ca"></i></if>
+		</volist>
+		<present name="article">：<a href="{:U('article/index','cate_id='.$cate_id.'&pid='.$article['id'])}">{$article.title}</a></present>
+		]
+		<eq name="allow" value="0">（该分类不允许发布内容）</eq>
+		</h2>
+	</div>
+
+	<!-- 高级搜索 -->
+	<div class="search-form" style="margin-bottom:10px;">
+		<div class="filter-group">
+			<div class="filter-label">城市：</div>
+			{:W('Home/District/showCityFilter', array("__ROOT__/Admin/OfficeMarket/index/city/[city]/cate_id/$cate_id/area/$area/bdType/$bdType/contactType/$contactType/sdType/$sdType/pn/$pn", $city))}
+		</div>
+		<div class="filter-group">
+			<div class="filter-label">区域：</div>
+			{:W('Home/District/showFilter', array("__ROOT__/Admin/OfficeMarket/index/city/$city/cate_id/$cate_id/area/[area]/bdType/$bdType/contactType/$contactType/sdType/$sdType/pn/$pn", $city, $area))}
+		</div>
+		<div class="filter-group">
+			<div class="filter-label">类型：</div>
+			{:W('Home/Lookup/showFilter', array("__ROOT__/Admin/OfficeMarket/index/city/$city/cate_id/$cate_id/area/$area/bdType/[bdType]/contactType/$contactType/sdType/$sdType/pn/$pn", '[bdType]', 'OFFICE_MARKET_BD_TYPE', $bdType))}
+		</div>
+		<div class="filter-group">
+			<div class="filter-label">供求分类：</div>
+			{:W('Home/Lookup/showFilter', array("__ROOT__/Admin/OfficeMarket/index/city/$city/cate_id/$cate_id/area/$area/bdType/$bdType/contactType/$contactType/sdType/[sdType]/pn/$pn", '[sdType]', 'HOUSE_SUPPLY_DEMAND', $sdType))}
+		</div>
+		<div class="filter-group last">
+			<div class="filter-label">联系人类型：</div>
+			{:W('Home/Lookup/showFilter', array("__ROOT__/Admin/OfficeMarket/index/city/$city/cate_id/$cate_id/area/$area/bdType/$bdType/contactType/[contactType]/sdType/$sdType/pn/$pn", '[contactType]', 'HOUSE_CONTACT_TYPE', $contactType))}
+		</div>
+		<div class="sort-group">
+			<div class="filter-label">排序：</div>
+			{:W('Home/Sort/showSort', array(array('a.square'=>'面积','a.price'=>'价格','b.create_time'=>'时间'), "__ROOT__/Admin/OfficeMarket/index/city/$city/cate_id/$cate_id/area/$area/bdType/$bdType/contactType/$contactType/sdType/$sdType/pn/1"))}
+		</div>
+		<div style="clear:both"></div>
+	</div>
+
+	<!-- 按钮工具栏 -->
+	<div class="cf">
+		<div class="fl">
+			<div class="btn-group">
+				<gt name="allow" value="0">
+					<a class="btn document_add" href="{:U('OfficeMarket/add')}">新 增</a>
+				<else/>
+					<button class="btn disabled" >新 增</button>
+				</gt>
+			</div>
+            <button class="btn ajax-post" target-form="ids" url="{:U("OfficeMarket/setStatus",array("status"=>1))}">启 用</button>
+			<button class="btn ajax-post" target-form="ids" url="{:U("OfficeMarket/setStatus",array("status"=>0))}">禁 用</button>
+			<input type="hidden" class="hide-data" name="cate_id" value="{$cate_id}"/>
+			<input type="hidden" class="hide-data" name="pid" value="0"/>
+			<button class="btn ajax-post confirm" target-form="ids" url="{:U("OfficeMarket/setStatus",array("status"=>-1))}">删 除</button>
+		</div>
+	</div>
+
+	<!-- 数据表格 -->
+    <div class="data-table">
+		<table>
+            <!-- 表头 -->
+            <thead>
+                <tr>
+                    <th class="row-selected row-selected">
+                        <input class="check-all" type="checkbox">
+                    </th>
+                    <th>标题</th>
+                    <th>地段</th>
+                    <th>区域</th>            
+                    <th>类型</th>
+                    <th>价格</th>
+                    <th>供求</th>
+                    <th>面积</th>
+                    <th>联系人类型</th>
+                    <th>状态</th>
+                    <th>创建时间</th>
+                </tr>
+            </thead>
+
+            <!-- 列表 -->
+            <tbody>
+                <volist name="dataList" id="data">
+                    <tr>
+                        <td><input class="ids" type="checkbox" value="{$data['id']}" name="ids[]"></td>
+                        <td>
+                        	<a href="{:U('OfficeMarket/edit', array('id'=>$data['id']))}">{$data.title}</a>
+                       	</td>
+                        <td>{$data.area_sector}</td>
+                        <td>{$data.busi_area_name}</td>
+                        <td>{$data.bd_type|get_lookup_value='OFFICE_MARKET_BD_TYPE',###}</td>
+                        <td>{$data.price}{$data.price_unit|get_lookup_value='OFFICE_MARKET_PRICE_UNIT',###}</td>                       
+                        <td>{$data.sd_type|get_lookup_value='HOUSE_SUPPLY_DEMAND',###}</td>
+                        <td>{$data.square}</td>
+                        <td>{$data.contact_type|get_lookup_value='HOUSE_CONTACT_TYPE',###}</td>
+                        <td>{$data.status|get_lookup_value='DOC_STATUS',###}</td>
+                        <td>{$data.ctime}</td>
+                    </tr>
+                </volist>
+            </tbody>
+        </table>
+	</div>
+	<!-- 分页 -->
+    <div class="page">
+        {:W('Home/Pagination/showPagination', array("__ROOT__/Admin/OfficeMarket/index/city/$city/cate_id/$cate_id/area/$area/bdType/$bdType/contactType/$contactType/sdType/$sdType/pn/[pn]", $pn, $totalCount, $scope))}
+    </div>
+</div>
+</block>

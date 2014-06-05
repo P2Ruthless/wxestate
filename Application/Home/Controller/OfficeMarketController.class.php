@@ -14,7 +14,7 @@ class OfficeMarketController extends HouseController{
 	 * sdType 供求类型
 	 * pn 分页
 	 */
-	public function lists($area=0, $bdType=0, $contactType=0, $sdType=3, $pn=1){
+	public function lists($area=0, $bdType=0, $contactType=0, $sdType=0, $pn=1){
 		$category = $this->category();
 		$city = get_current_city();
 
@@ -28,7 +28,9 @@ class OfficeMarketController extends HouseController{
 		if($contactType != 0){
 			$map['a.contact_type'] = (int)$contactType;
 		}
-		$map['a.sd_type'] = (int)$sdType;
+		if($sdType != 0){
+			$map['a.sd_type'] = (int)$sdType;
+		}
 
 		$model = D('OfficeMarket', 'Logic');
 

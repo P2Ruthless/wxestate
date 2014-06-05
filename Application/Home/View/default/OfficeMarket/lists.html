@@ -1,35 +1,51 @@
-<extend name="Base/common"/>
+<extend name="Public/base"/>
 
-<block name="header">
-	<span>{$city.name}</span><a href="{:U('Home/District/switchCity')}">切换城市</a>
-</block>
-
-<block name="side"></block>
-
-<block name="body">
-	<div>
-		<if condition="is_login()">
-		<a class="btn btn-default" href="{:U('Home/OfficeMarket/add')}">信息发布</a>
-		</if>
+<block name="content">
+	<div class="mapbreak"><span>写字楼商铺（{$totalCount}）&nbsp;&gt;&nbsp;</span></div>
+	<div class="left_hotlp">
+		<div class="filter-group">
+			<div class="filter-label">区域：</div>
+			{:W('District/showFilter', array("__ROOT__/home/om/[area]/$bdType/$contactType/$sdType/$pn", $city, $area))}
+		</div>
+		<div class="filter-group">
+			<div class="filter-label">类别：</div>
+			{:W('Lookup/showFilter', array("__ROOT__/home/om/$area/[bdType]/$contactType/$sdType/$pn", '[bdType]', 'OFFICE_MARKET_BD_TYPE', $bdType))}
+		</div>
+		<div class="filter-group last">
+			<div class="filter-label">分类：</div>
+			{:W('Lookup/showFilter', array("__ROOT__/home/om/$area/$bdType/$contactType/[sdType]/$pn", '[sdType]', 'HOUSE_SUPPLY_DEMAND', $sdType))}
+		</div>
 	</div>
-	{:W('District/showFilter', array("__ROOT__/home/om/[area]/$bdType/$contactType/$sdType/$pn", $city, $area))}
-	{:W('Lookup/showFilter', array("__ROOT__/home/om/$area/[bdType]/$contactType/$sdType/$pn", '[bdType]', 'OFFICE_MARKET_BD_TYPE', $bdType))}
-	{:W('Lookup/showFilter', array("__ROOT__/home/om/$area/$bdType/[contactType]/$sdType/$pn", '[contactType]', 'HOUSE_CONTACT_TYPE', $contactType))}
-	{:W('Lookup/showTab', array("__ROOT__/home/om/$area/$bdType/$contactType/[sdType]/$pn", '[sdType]', 'HOUSE_SUPPLY_DEMAND', $sdType))}
-	<table style="width:100%;">
-		<?php use Common\Model\LookupModel;?>
-		<volist id="om" name="dataList">
-		<tr>
-			<td><img src="{$om.thumb|default='/Public/wartertest.png'}"/></td>
-			<td>
-				<a href="{:U('/Home/om/detail/'.$om['id'])}" target="_blank">{$om.title}</a>
-			</td>
-			<td>{$om.price}</td>
-			<td>{$om.price_unit|LookupModel::getValue='OFFICE_MARKET_PRICE_UNIT',###}</td>
-			<td>{$om.busi_area_name}</td>
-			<td>{$om.square}M<sup>2</sup></td>
-		</tr>
-		</volist>
-	</table>
-	{:W('Pagination/showPagination', array("__ROOT__/home/om/$area/$bdType/$contactType/$sdType/[pn]", $pn, $totalCount, $scope))}
+	<div class="right_hotlp">
+		<div class="guanzhu">
+
+		</div>
+	</div>
+    
+	<div class="clear"></div>
+	<!--搜索结果-->
+	<ul class="ssjg">
+		<volist name="dataList" id="data">
+		<li>
+			<a href="__ROOT__/home/hr/detail/{$data.id}" target="_blank"><img src="{$data.thumbnail}"/>
+			<div class="ssjg_tt">{$data.title}</div>
+			<div class="ssjg_xq">
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td align="left">{$data.community}</td>
+						<td align="left">{$data.bed_room}室{$data.live_room}厅</td>
+						<td align="left">{$data.square}平米</td>
+						<td align="left"><span>{$data.price}元/月</span></td>
+					</tr>
+				</table>
+			</div>
+			<div class="ssjg_text">
+				{$data.floor}层/{$data.floor_max}层,{$data.decorate|get_lookup_value='HOUSE_DECORATE_TYPE',###}<br />{$data.busi_area_name},{$data.structure|get_lookup_value='HOUSE_STRUCTURE_TYPE',###}<br />{$data.create_time|friendlyDate=###,'mohu'}发布
+				{:W('Tag/showTag', array($data['add_on']))}
+        	</div>
+			</a>
+    	</li>
+    	</volist>
+    </ul>
+    {:W('Pagination/showPagination', array("__ROOT__/home/hr/$area/$price/$room/$rentType/[pn]", $pn, $totalCount, $scope))}
 </block>
