@@ -41,12 +41,13 @@ $(function(){
 		<br />
         房型：<em>{$info.bed_room}室{$info.live_room}厅</em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;面积：<em>{$info.square}平米</em>
         <br />
-        朝向：<em>{$info.face|get_lookup_value='HOUSE_FACE_TYPE', ###}</em>
+        出租类型：<em>{$info.rent_type|get_lookup_value='HOUSE_RENT_TYPE', ###}</em>
         <br />
         楼层：<em>{$info.floor}层({$info.floor_max}层)</em>
         <br />
         <div class="tel_bp">{$info.contact_tel}</div>
-        装修：<em>{$info.decorate|get_lookup_value='HOUSE_DECORATE_TYPE',###}</em>
+        押金方式：<em>{$info.deposit_type|get_lookup_value='HOUSE_RENT_DEPOSIT_TYPE',###}</em>
+        <br />
     </div>
     <div class="clear"></div>
     <div class="index_left_tt">房源描述</div>
@@ -58,35 +59,20 @@ $(function(){
     <img src="__ROOT__{$housePic.path}" style="max-width:640px"/>
     </volist>
      <div class="index_left_tt">地理位置</div>
-    //TODO:地图
+    <div id="baidumap_forpick" style="height:300px;max-width:726px"></div>
     <div class="left_hotlp_tt">附近推荐</div>
       <ul class="hotlp_box">
+        <volist name="info.nearbyList" id="nearby">
    	    <li><div class="hotlp_box_line">
-            <a href="#"><img  /></a>
-            <a href="#" class="hotlp_lpname">城市印象在售</a>
+            <a href="#"><img src="__ROOT__{$nearby.thumbnail}" /></a>
+            <a href="#" class="hotlp_lpname">{$nearby.title}</a>
             <div class="clear"></div>
-            均价：14000元/平米<br />
-            电话：400-606-6969 转 27829<br />
-            地址：甘井子区迎客路中段(机场附近)<br />
-   	    </div>
-            </li>
-            
-             <li><div class="hotlp_box_line">
-            <a href="#"><img  /></a>
-            <a href="#" class="hotlp_lpname">城市印象在售</a>
-            <div class="clear"></div>
-            均价：14000元/平米<br />
-            电话：400-606-6969 转 27829<br />
-            地址：甘井子区迎客路中段(机场附近)<br />
-             </div></li>
-             <li><div class="hotlp_box_line">
-            <a href="#"><img  /></a>
-            <a href="#" class="hotlp_lpname">城市印象在售</a>
-            <div class="clear"></div>
-            均价：14000元/平米<br />
-            电话：400-606-6969 转 27829<br />
-            地址：甘井子区迎客路中段(机场附近)<br />
-            <a href="#"></a></div> </li>
+            均价：{$nearby.price}元/平米<br />
+            电话：{$nearby.contact_tel}<br />
+            地址：{$nearby.area_name}{$nearby.busi_area_name}<br />
+   	        </div>
+        </li>
+        </volist>
           <div class="clear"></div>
         </ul>
     </div>
@@ -106,4 +92,22 @@ $(function(){
     <!--rigth end-->
     
     <div class="clear"></div>
+</block>
+
+<block name="footscript">
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=5d659c6eae4dd6ee412466047f735196"></script>
+<script type="text/javascript">
+var lng = {$info.longitude};
+var lat = {$info.latitude};
+if(lng == 0 || lat == 0){
+    return ;
+}
+var map = new BMap.Map("baidumap_forpick");
+
+var marker = new BMap.Marker(new BMap.Point(lng, lat));
+map.centerAndZoom(marker.getPosition(),15);
+map.enableScrollWheelZoom();
+map.addOverlay(marker);
+
+</script>
 </block>

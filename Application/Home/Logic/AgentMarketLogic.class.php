@@ -25,4 +25,24 @@ class AgentMarketLogic extends BaseLogic{
 		return $data;
 
 	}
+
+	public function listsForIndex($city, $count){
+		$AgentMarket = M('DocumentAgentmarket');
+		return $AgentMarket->alias('am')
+			->field('doc.id,doc.title,am.loc_txt,am.price_avg,am.contact_tel,am.thumbnail,area.name area_name,busi_area.name busi_area_name')
+			->join('to_document doc on doc.id=am.id')
+			->join('to_district area on area.id=am.area', 'LEFT')
+			->join('to_district busi_area on busi_area.id=am.busi_area', 'LEFT')
+			->where(array(
+				'doc.status'=>array('NEQ', -1),
+				'doc.category_id'=>10005,
+				'doc.create_time'=>array('lt', NOW_TIME),
+				'doc.deadline=0 OR doc.deadline>'.NOW_TIME,
+				'doc.position & 4 = 4',
+				'am.city'=> is_array($city) ? $city['id'] : $city
+			))
+			->order('doc.id desc')
+			->limit($count)
+			->select();
+	}
 }

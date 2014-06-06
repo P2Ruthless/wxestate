@@ -37,10 +37,14 @@ class IndexController extends HomeController {
         //获取city下房屋租赁首页推荐 最多4条
         $houseRentList = D('HouseRent', 'Logic')->listsForIndex($city, 4);
 
+        //热门楼盘 6条
+        $agentMarketList = D('AgentMarket', 'Logic')->listsForIndex($city, 6);
+
         cookie('city', $city['id'], 30 * 24 * 60 * 60);
 
         $this->assign('houseRentList', $houseRentList);
         $this->assign('houseSaleList', $houseSaleList);
+        $this->assign('agentMarketList', $agentMarketList);
         $this->assign('currentNav', 1);
         $this->assign('city', $city);
         

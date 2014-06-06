@@ -17,7 +17,7 @@
 		<div class="fangwuzulin">
 			<div class="index_left_tt">房屋租赁</div>
 			<volist name="houseRentList" id="houseRent">
-			<a href="#" class="fangwuzulin_list">
+			<a href="__ROOT__/home/hr/detail/{$houseRent.id}" target="_blank" class="fangwuzulin_list">
 				<img src="__ROOT__{$houseRent.thumbnail|default=''}" />
 			{$houseRent.area_name}-{$houseRent.busi_area_name}<br />
 			{$houseRent.bed_room}室{$houseRent.live_room}厅，{$houseRent.decorate|get_lookup_value='HOUSE_DECORATE_TYPE',###}<br />
@@ -42,73 +42,19 @@
 	<div class="left_hotlp2">
 		<div class="left_hotlp_tt">热门楼盘</div>
 		<ul class="hotlp_box2">
+			<volist name="agentMarketList" id="agentMarket">
 			<li><div class="hotlp_box_line">
-			<a href="#"><img  /></a>
-			<a href="#" class="hotlp_lpname">城市印象在售</a><span>在售</span>
+			<a href="__ROOT__/home/am/detail/{$agentMarket.id}" target="_blank"><img src="__ROOT__{$agentMarket.thumbnail}" /></a>
+			<a href="__ROOT__/home/am/detail/{$agentMarket.id}" target="_blank" class="hotlp_lpname">{$agentMarket.title}在售</a><span>在售</span>
 			<div class="clear"></div>
-			均价：14000元/平米<br />
-			电话：400-606-6969 转 27829<br />
-			地址：甘井子区迎客路中段(机场附近)<br />
+			均价：{$agentMarket.price_avg}元/平米<br />
+			电话：{$agentMarket.contact_tel}<br />
+			地址：{$agentMarket.area_name}{$agentMarket.busi_area_name}{$agentMarket.loc_txt}<br />
 			<a href="#">实景6张</a>&nbsp;&nbsp;<a href="#"> 户型4张</a>
 			<a href="#"></a> <div class="hotlp_num">1</div>
 			</div>
-		</li>
-
-		<li><div class="hotlp_box_line">
-			<a href="#"><img  /></a>
-			<a href="#" class="hotlp_lpname">城市印象在售</a><span>在售</span>
-			<div class="clear"></div>
-			均价：14000元/平米<br />
-			电话：400-606-6969 转 27829<br />
-			地址：甘井子区迎客路中段(机场附近)<br />
-			<a href="#">实景6张</a>&nbsp;&nbsp;<a href="#"> 户型4张</a>
-			<a href="#"></a> <div class="hotlp_num">1</div>
-			</div></li>
-			<li><div class="hotlp_box_line">
-			<a href="#"><img  /></a>
-			<a href="#" class="hotlp_lpname">城市印象在售</a><span>在售</span>
-			<div class="clear"></div>
-			均价：14000元/平米<br />
-			电话：400-606-6969 转 27829<br />
-			地址：甘井子区迎客路中段(机场附近)<br />
-			<a href="#">实景6张</a>&nbsp;&nbsp;<a href="#"> 户型4张</a>
-			<a href="#"></a> <div class="hotlp_num">1</div>
-			</div>
-		</li>
-		<li><div class="hotlp_box_line">
-			<a href="#"><img  /></a>
-			<a href="#" class="hotlp_lpname">城市印象在售</a><span>在售</span>
-			<div class="clear"></div>
-			均价：14000元/平米<br />
-			电话：400-606-6969 转 27829<br />
-			地址：甘井子区迎客路中段(机场附近)<br />
-			<a href="#">实景6张</a>&nbsp;&nbsp;<a href="#"> 户型4张</a>
-			<a href="#"></a> <div class="hotlp_num">1</div>
-			</div>
-		</li>
-		<li><div class="hotlp_box_line">
-			<a href="#"><img  /></a>
-			<a href="#" class="hotlp_lpname">城市印象在售</a><span>在售</span>
-			<div class="clear"></div>
-			均价：14000元/平米<br />
-			电话：400-606-6969 转 27829<br />
-			地址：甘井子区迎客路中段(机场附近)<br />
-			<a href="#">实景6张</a>&nbsp;&nbsp;<a href="#"> 户型4张</a>
-			<a href="#"></a> <div class="hotlp_num">1</div>
-			</div>
-		</li>
-		<li><div class="hotlp_box_line">
-			<a href="#"><img  /></a>
-			<a href="#" class="hotlp_lpname">城市印象在售</a><span>在售</span>
-			<div class="clear"></div>
-			均价：14000元/平米<br />
-			电话：400-606-6969 转 27829<br />
-			地址：甘井子区迎客路中段(机场附近)<br />
-			<a href="#">实景6张</a>&nbsp;&nbsp;<a href="#"> 户型4张</a>
-			<a href="#"></a> <div class="hotlp_num">1</div>
-			</div>
-		</li>
-
+			</li>
+			</volist>
 		<div class="clear"></div>
 	</ul>
 	</div>

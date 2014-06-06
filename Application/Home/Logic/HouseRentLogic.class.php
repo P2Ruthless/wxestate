@@ -108,6 +108,27 @@ class HouseRentLogic extends BaseLogic{
 		$housePicList = $PicModel->field('path')->where(array('pid'=>$id))->select();
 		$data['picList'] = $housePicList;
 
+		//附近推荐
+		$HouseRent = M('DocumentHouserent');
+		$nearbyList = $HouseRent->alias('hr')
+			->field('doc.id,doc.title,hr.price,hr.contact_tel,hr.thumbnail,area.name area_name,busi_area.name busi_area_name')
+			->join('__DOCUMENT__ doc on doc.id=hr.id')
+			->join('__DISTRICT__ area on area.id=hr.area', 'LEFT')
+			->join('__DISTRICT__ busi_area on busi_area.id=hr.busi_area', 'LEFT')
+			->where(array(
+				'doc.status'=>1,
+				'doc.category_id'=>10001,
+				'doc.create_time'=>array('lt', NOW_TIME),
+				'doc.deadline=0 OR doc.deadline>'.NOW_TIME,
+				'hr.busi_area'=>(int)$data['busi_area'],
+				'doc.id'=>array('NEQ', (int)$data['id'])
+			))
+			->order('id desc')
+			->limit(3)
+			->select();
+
+		$data['nearbyList'] = $nearbyList;
+
 		return $data;
 	}
 }
